@@ -6,8 +6,10 @@ import PropTypes from "prop-types";
 const MainLayout = ({ children }) => {
   return (
     <div className="flex flex-row min-h-screen">
-      <Sidebar className="w-1/4" />
-      <div className="flex flex-col w-3/4">
+      <div className="w-1/6">
+        <Sidebar />
+      </div>
+      <div className="flex flex-col w-5/6">
         <Header />
         <ScrollToTop />
         <div className="flex-grow">{children}</div>

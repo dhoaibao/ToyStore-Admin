@@ -1,0 +1,69 @@
+import { Form, Input, Button, message } from "antd";
+import { authService } from "../services";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { getLoggedInUser } from "../redux/thunks/userThunk";
+import { useNavigate } from "react-router-dom";
+
+const Login = () => {
+  const [loginForm] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogin = async (values) => {
+    setLoading(true);
+    try {
+      const response = await authService.signIn(values);
+      const { accessToken, refreshToken } = response.data;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
+      await dispatch(getLoggedInUser());
+
+      navigate("/");
+    } catch (error) {
+      console.error(error.data);
+      message.error("Tài khoản không hợp lệ!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between w-3/5 py-14 bg-white p-4 rounded-xl">
+      <div className="w-1/2">
+        <img src="/src/assets/login_illustration.jpg" alt="login" />
+      </div>
+      <div className="flex flex-col items-center justify-center w-1/2">
+        <p className="font-semibold text-xl mb-2">Đăng nhập</p>
+        <Form layout="vertical" form={loginForm} onFinish={handleLogin}>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Vui lòng nhập email!" },
+              { type: "email", message: "Email không hợp lệ!" },
+            ]}
+          >
+            <Input placeholder="Nhập email" />
+          </Form.Item>
+          <Form.Item
+            label="Mật khẩu"
+            name="password"
+            rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+          >
+            <Input.Password placeholder="Nhập mật khẩu" />
+          </Form.Item>
+          <Button type="primary" htmlType="submit" loading={loading} block>
+            Đăng nhập
+          </Button>
+        </Form>
+      </div>
+    </div>
+  );
+};
+
+export default Login;

@@ -9,8 +9,9 @@ import {
   KeyRound,
   Bolt,
   Ticket,
-  BadgePercent
+  BadgePercent,
 } from "lucide-react";
+import { Divider } from "antd";
 
 const Sidebar = () => {
   const menuItems = [
@@ -74,9 +75,10 @@ const Sidebar = () => {
   ];
   return (
     <div className="bg-primary text-white h-screen p-4 flex flex-col">
-      <div className="mb-6 flex justify-center">
+      <div className="flex justify-center">
         <img src="/src/assets/Logo(150x50).png" alt="Logo" className="h-12" />
       </div>
+      <Divider className="bg-white bg-opacity-20" />
       <div className="flex-1 overflow-y-auto scrollbar-hide space-y-4">
         {menuItems.map((item, index) => (
           <NavItem key={index} to={item.to} title={item.title} icon={item.icon}>

@@ -9,7 +9,7 @@ const MainLayout = ({ children }) => {
       <div className="w-1/5">
         <Sidebar />
       </div>
-      <div className="flex flex-col w-4/5 bg-gray-100">
+      <div className="flex flex-col w-4/5">
         <Header />
         <ScrollToTop />
         <div className="flex-grow">{children}</div>

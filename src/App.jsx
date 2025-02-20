@@ -10,8 +10,10 @@ import "dayjs/locale/vi";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import viVN from "antd/locale/vi_VN";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
+const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
 
 dayjs.locale("vi");
 dayjs.extend(utc);
@@ -45,7 +47,15 @@ function App() {
               <Route
                 key={id}
                 path={path}
-                element={<MainLayout>{element}</MainLayout>}
+                element={
+                  path.startsWith("/auth") ? (
+                    <AuthLayout>{element}</AuthLayout>
+                  ) : (
+                    <ProtectedRoute>
+                      <MainLayout>{element}</MainLayout>
+                    </ProtectedRoute>
+                  )
+                }
               />
             ))}
             <Route path="*" element={<NotFoundPage />} />

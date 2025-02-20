@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+.custom-dropdown-menu .ant-dropdown-menu-item:hover {
+  @apply text-primary;
+}

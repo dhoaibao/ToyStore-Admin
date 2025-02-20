@@ -14,6 +14,7 @@ const ProfileDropdown = () => {
   const location = useLocation();
 
   const user = useSelector((state) => state.user.user);
+  const isLogin = useSelector((state) => state.user.isLogin);
 
   const { color, initial } = generateAvatar(user?.email, user?.fullName);
 
@@ -56,17 +57,22 @@ const ProfileDropdown = () => {
         overlayClassName="custom-dropdown-menu"
       >
         <a onClick={(e) => e.preventDefault()}>
-          <Space>
-            <Avatar
-              src={user?.avatar?.url}
-              style={{
-                backgroundColor: user?.avatar?.url ? "transparent" : color,
-                fontSize: 16,
-              }}
-            >
-              {!user?.avatar?.url && initial}
-            </Avatar>
-          </Space>
+          <div className="flex items-center space-x-3">
+            <p className="font-semibold">
+              {isLogin ? user.fullName : "Đăng nhập"}
+            </p>
+            <Space>
+              <Avatar
+                src={user?.avatar?.url}
+                style={{
+                  backgroundColor: user?.avatar?.url ? "transparent" : color,
+                  fontSize: 16,
+                }}
+              >
+                {!user?.avatar?.url && initial}
+              </Avatar>
+            </Space>
+          </div>
         </a>
       </Dropdown>
       <Profile open={profileOpen} setOpen={setProfileOpen} />

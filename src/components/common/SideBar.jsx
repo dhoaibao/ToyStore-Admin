@@ -75,7 +75,7 @@ const Sidebar = () => {
   ];
   return (
     <div className="bg-primary text-white h-screen p-4 flex flex-col">
-      <div className="flex justify-center">
+      <div className="flex justify-center bg-white rounded-xl">
         <img src="/src/assets/Logo(150x50).png" alt="Logo" className="h-12" />
       </div>
       <Divider className="bg-white bg-opacity-20" />

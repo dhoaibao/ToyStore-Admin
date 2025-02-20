@@ -1,42 +1,108 @@
 import { Table } from "antd";
+import { useState, useEffect } from "react";
+import { productService } from "../services";
 
 const Product = () => {
-  const dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-  ];
-
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
-      key: "name",
+      showSorterTooltip: {
+        target: "full-header",
+      },
+      filters: [
+        {
+          text: "Joe",
+          value: "Joe",
+        },
+        {
+          text: "Jim",
+          value: "Jim",
+        },
+        {
+          text: "Submenu",
+          value: "Submenu",
+          children: [
+            {
+              text: "Green",
+              value: "Green",
+            },
+            {
+              text: "Black",
+              value: "Black",
+            },
+          ],
+        },
+      ],
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      filterSearch: true,
+      onFilter: (value, record) => record.name.indexOf(value) === 0,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"],
     },
     {
       title: "Age",
       dataIndex: "age",
-      key: "age",
+      defaultSortOrder: "descend",
+      sorter: (a, b) => a.age - b.age,
     },
     {
       title: "Address",
       dataIndex: "address",
-      key: "address",
+      filters: [
+        {
+          text: "London",
+          value: "London",
+        },
+        {
+          text: "New York",
+          value: "New York",
+        },
+      ],
+      onFilter: (value, record) => record.address.indexOf(value) === 0,
     },
   ];
+  const data = [
+    {
+      key: "1",
+      name: "John Brown",
+      age: 32,
+      address: "New York No. 1 Lake Park",
+    },
+    {
+      key: "2",
+      name: "Jim Green",
+      age: 42,
+      address: "London No. 1 Lake Park",
+    },
+    {
+      key: "3",
+      name: "Joe Black",
+      age: 32,
+      address: "Sydney No. 1 Lake Park",
+    },
+    {
+      key: "4",
+      name: "Jim Red",
+      age: 32,
+      address: "London No. 2 Lake Park",
+    },
+  ];
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
   return (
     <div className="container mx-auto p-4">
       <p className="text-xl font-semibold mb-4">Sản phẩm</p>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table
+        columns={columns}
+        dataSource={data}
+        onChange={onChange}
+        showSorterTooltip={{
+          target: "sorter-icon",
+        }}
+      />
     </div>
   );
 };

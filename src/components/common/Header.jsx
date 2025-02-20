@@ -11,7 +11,6 @@ const Header = () => {
   const navigate = useNavigate();
 
   const isLogin = useSelector((state) => state.user.isLogin);
-  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getLoggedInUser());
@@ -24,17 +23,13 @@ const Header = () => {
   return (
     <div className="flex items-center justify-end bg-white space-x-4 p-4">
       <Bell strokeWidth={1} />
-      <div className="flex items-center space-x-3">
-        <p className="font-semibold">
-          {isLogin ? user.user.fullName : "Đăng nhập"}
-        </p>
-        <button
-          onClick={() => !isLogin && handleLogin}
-          className="flex items-center justify-center"
-        >
-          {isLogin ? <ProfileDropdown /> : <LogIn strokeWidth={1} />}
-        </button>
-      </div>
+
+      <button
+        onClick={() => !isLogin && handleLogin}
+        className="flex items-center justify-center"
+      >
+        {isLogin ? <ProfileDropdown /> : <LogIn strokeWidth={1} />}
+      </button>
     </div>
   );
 };

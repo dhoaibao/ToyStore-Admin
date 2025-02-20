@@ -5,7 +5,7 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: { colors: { primary: '#122da6', 'hover-primary': '#122da6' } },
+    extend: { colors: { primary: '#122da6' } },
   },
   plugins: [],
 }

@@ -9,3 +9,13 @@ body {
 .custom-dropdown-menu .ant-dropdown-menu-item:hover {
   @apply text-primary;
 }
+
+/* Ẩn thanh cuộn nhưng vẫn cho cuộn nội dung */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE và Edge */
+  scrollbar-width: none; /* Firefox */
+}

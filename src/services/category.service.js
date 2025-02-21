@@ -5,8 +5,24 @@ class CategoryService {
         this.api = createApiClient(path);
     }
 
-    async getAllCategories() {
-        return (await this.api.get('/')).data;
+    async getAllCategories(query) {
+        return (await this.api.get(`?${query}`)).data;
+    }
+
+    async createCategory(data) {
+        return (await this.api.post('/', data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })).data;
+    }
+
+    async updateCategory(id, data) {
+        return (await this.api.put(`/${id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })).data;
     }
 }
 

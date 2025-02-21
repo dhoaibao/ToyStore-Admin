@@ -23,7 +23,6 @@ const Header = () => {
   return (
     <div className="flex items-center justify-end bg-white space-x-4 p-4">
       <Bell strokeWidth={1} />
-
       <button
         onClick={() => !isLogin && handleLogin}
         className="flex items-center justify-center"

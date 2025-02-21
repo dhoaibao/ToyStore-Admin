@@ -1,17 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 const NavItem = ({ to, title, icon, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
   const isActive = location.pathname === to;
-
   const hasChildren = !!children;
+
+  const isAnyChildActive = hasChildren
+    ? Array.isArray(children.props.children) &&
+      children.props.children.some(
+        (child) =>
+          child.props.to && location.pathname.startsWith(child.props.to)
+      )
+    : false;
+
+  const [isOpen, setIsOpen] = useState(isAnyChildActive);
+
+  useEffect(() => {
+    if (isAnyChildActive) {
+      setIsOpen(true);
+    }
+  }, [isAnyChildActive]);
 
   const handleClick = () => {
     if (hasChildren) setIsOpen((prev) => !prev);

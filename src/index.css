@@ -10,7 +10,16 @@ body {
   @apply text-primary;
 }
 
-/* Ẩn thanh cuộn nhưng vẫn cho cuộn nội dung */
+.table-row-light,
+.table-row-light .ant-table-cell.ant-table-column-sort {
+  @apply bg-white;
+}
+
+.table-row-gray,
+.table-row-gray .ant-table-cell.ant-table-column-sort {
+  @apply bg-gray-100;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

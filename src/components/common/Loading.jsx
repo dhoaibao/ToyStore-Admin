@@ -1,7 +1,8 @@
 import { Spin } from 'antd';
+
 const LoadingPage = () => {
   return (
-    <div className="flex justify-center items-center w-screen h-screen">
+    <div className="flex justify-center items-center w-full h-full">
       <Spin size="large" />
     </div>
   );

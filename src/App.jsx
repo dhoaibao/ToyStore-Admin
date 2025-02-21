@@ -1,9 +1,9 @@
 import "./App.css";
-import LoadingPage from "./pages/Loading";
+import Loading from "./components/common/Loading";
 import NotFoundPage from "./pages/NotFound";
 import routes from "./routes";
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
@@ -19,6 +19,16 @@ dayjs.locale("vi");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Ho_Chi_Minh");
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 function App() {
   return (
@@ -37,11 +47,33 @@ function App() {
             linkHoverColor: "white",
             separatorColor: "white",
           },
+          Table: {
+            headerBg: "#122da6",
+            headerColor: "white",
+            headerSortActiveBg: "#122da6",
+            headerSortActiveColor: "white",
+            headerSortHoverBg: "#122da6",
+            headerSortHoverColor: "white",
+            headerFilterActiveBg: "#122da6",
+            headerFilterActiveColor: "white",
+            headerFilterHoverBg: "#122da6",
+            headerFilterHoverColor: "white",
+            headerFilterIconColor: "white",
+            cellPaddingBlock: "8px",
+            rowHoverBg: "#DBEAFE",
+          },
         },
       }}
     >
-      <Suspense fallback={<LoadingPage />}>
+      <Suspense
+        fallback={
+          <div className="w-screen h-screen">
+            <Loading />
+          </div>
+        }
+      >
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             {routes.map(({ id, path, element }) => (
               <Route

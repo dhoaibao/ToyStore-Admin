@@ -115,6 +115,7 @@ const Brand = () => {
     <>
       <DataTable
         title="Thương hiệu"
+        searchPlaceholder={"Nhập tên thương hiệu để tìm kiếm..."}
         data={brands}
         loading={loading}
         columns={columns}

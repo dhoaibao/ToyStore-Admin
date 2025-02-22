@@ -1,109 +1,172 @@
-import { Table } from "antd";
-import { useState, useEffect } from "react";
+import { Button } from "antd";
+import { useState, useEffect, useMemo } from "react";
 import { productService } from "../services";
+import moment from "moment";
+import { Eye } from "lucide-react";
+import ProductForm from "../components/form/ProductForm";
+import { useLocation } from "react-router-dom";
+import DataTable from "../components/common/DataTable";
 
 const Product = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [fetchData, setFetchData] = useState(true);
+  const [pagination, setPagination] = useState({
+    totalPages: 0,
+    limit: 10,
+    total: 0,
+  });
+
+  const location = useLocation();
+  const searchParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await productService.getAllProducts(
+          searchParams.toString()
+        );
+        setProducts(
+          response.data.map((item) => ({ ...item, key: item.productId }))
+        );
+        setPagination({
+          totalPages: response.pagination.totalPages,
+          limit: response.pagination.limit,
+          total: response.pagination.total,
+        });
+        setLoading(false);
+        setFetchData(false);
+      } catch (error) {
+        console.error("Failed to fetch product list: ", error.data);
+        setLoading(false);
+      }
+    };
+    if (fetchData || searchParams) fetchProducts();
+  }, [fetchData, searchParams]);
+
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
+      title: (
+        <div className="text-center">
+          <span>Hình ảnh</span>
+        </div>
+      ),
+      dataIndex: "productImages",
+      align: "center",
+      render: (productImages) => (
+        <div className="flex justify-center">
+          <img
+            src={productImages[0].uploadImage.url}
+            alt="category"
+            className="w-8 h-8 object-cover rounded-md"
+          />
+        </div>
+      ),
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Tên sản phẩm</span>
+        </div>
+      ),
+      dataIndex: "productName",
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Giá</span>
+        </div>
+      ),
+      align: "right",
+      dataIndex: "price",
+      render: (price) => `${price.toLocaleString("vi-VN")}đ`,
       showSorterTooltip: {
-        target: "full-header",
+        target: "sorter-icon",
       },
-      filters: [
-        {
-          text: "Joe",
-          value: "Joe",
-        },
-        {
-          text: "Jim",
-          value: "Jim",
-        },
-        {
-          text: "Submenu",
-          value: "Submenu",
-          children: [
-            {
-              text: "Green",
-              value: "Green",
-            },
-            {
-              text: "Black",
-              value: "Black",
-            },
-          ],
-        },
-      ],
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      filterSearch: true,
-      onFilter: (value, record) => record.name.indexOf(value) === 0,
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"],
+      sorter: (a, b) => a.price - b.price,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.age - b.age,
+      title: (
+        <div className="text-center">
+          <span>Tồn kho</span>
+        </div>
+      ),
+      align: "right",
+      dataIndex: "quantity",
+      render: (quantity, record) => (
+        <>
+         {record.soldNumber}/ {quantity}
+        </>
+      ),
+      showSorterTooltip: {
+        target: "sorter-icon",
+      },
+      sorter: (a, b) => a.price - b.price,
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      filters: [
-        {
-          text: "London",
-          value: "London",
-        },
-        {
-          text: "New York",
-          value: "New York",
-        },
-      ],
-      onFilter: (value, record) => record.address.indexOf(value) === 0,
+      title: (
+        <div className="text-center">
+          <span>Ngày tạo</span>
+        </div>
+      ),
+      dataIndex: "createdAt",
+      align: "center",
+      render: (createdAt) => moment(createdAt).format("DD/MM/YYYY"),
+      showSorterTooltip: {
+        target: "sorter-icon",
+      },
+      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Hành động</span>
+        </div>
+      ),
+      dataIndex: "action",
+      align: "center",
+      render: (_, record) => {
+        return (
+          <Button
+            type="text"
+            onClick={() => {
+              setSelectedProduct(record);
+              setOpen(true);
+            }}
+          >
+            <Eye strokeWidth={1} size={20} color="blue" />
+          </Button>
+        );
+      },
     },
   ];
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-    },
-    {
-      key: "4",
-      name: "Jim Red",
-      age: 32,
-      address: "London No. 2 Lake Park",
-    },
-  ];
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
+
   return (
-    <div className="container mx-auto p-4">
-      <p className="text-xl font-semibold mb-4">Sản phẩm</p>
-      <Table
+    <>
+      <DataTable
+        title="Sản phẩm"
+        searchPlaceholder={"Nhập tên sản phẩm để tìm kiếm..."}
+        data={products}
+        loading={loading}
         columns={columns}
-        dataSource={data}
-        onChange={onChange}
-        showSorterTooltip={{
-          target: "sorter-icon",
-        }}
+        setOpenForm={setOpen}
+        setSelectedItem={setSelectedProduct}
+        setFetchData={setFetchData}
+        pagination={pagination}
       />
-    </div>
+      <ProductForm
+        open={open}
+        setOpen={setOpen}
+        data={selectedProduct}
+        setFetchData={setFetchData}
+      />
+    </>
   );
 };
 

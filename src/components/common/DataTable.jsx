@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 
 const DataTable = ({
   title,
+  searchPlaceholder,
   columns,
   loading,
   data,
@@ -47,6 +48,16 @@ const DataTable = ({
   const onChange = (pagination, filters, sorter) => {
     console.log("params", filters);
 
+    if (filters) {
+      Object.keys(filters).forEach((key) => {
+        if (filters[key]) {
+          searchParams.set(key, filters[key]);
+        } else {
+          searchParams.delete(key);
+        }
+      });
+    }
+
     if (sorter.order) {
       searchParams.set("sort", sorter.field);
       searchParams.set("order", sorter.order === "ascend" ? "asc" : "desc");
@@ -70,22 +81,12 @@ const DataTable = ({
 
   return (
     <div className="mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="items-center mb-4">
         <p className="text-2xl font-bold">{title}</p>
-        <Button
-          type="primary"
-          onClick={() => {
-            setSelectedItem(null);
-            setOpenForm(true);
-          }}
-        >
-          <Plus strokeWidth={1} size={20} />
-          Thêm mới
-        </Button>
       </div>
       <div className="flex justify-between items-center space-x-4 mb-4">
         <Input.Search
-          placeholder={`Nhập tên ${title.toLowerCase()} để tìm kiếm...`}
+          placeholder={searchPlaceholder || "Tìm kiếm..."}
           enterButton
           allowClear
           value={searchText}
@@ -93,9 +94,21 @@ const DataTable = ({
           onSearch={handleSearch}
           className="w-1/3"
         />
-        <Button onClick={handleRefresh}>
-          <RotateCcw strokeWidth={1} size={20} />
-        </Button>
+        <div className="flex items-center space-x-2">
+          <Button onClick={handleRefresh}>
+            <RotateCcw strokeWidth={1} size={20} />
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              setSelectedItem(null);
+              setOpenForm(true);
+            }}
+          >
+            <Plus strokeWidth={1} size={20} />
+            Thêm mới
+          </Button>
+        </div>
       </div>
       <Table
         bordered
@@ -120,6 +133,7 @@ const DataTable = ({
         expandable={expandable}
         sticky
         scroll={{ y: "calc(100vh - 296px)" }}
+        tableLayout="auto"
       />
     </div>
   );
@@ -127,6 +141,7 @@ const DataTable = ({
 
 DataTable.propTypes = {
   title: PropTypes.string.isRequired,
+  searchPlaceholder: PropTypes.string,
   columns: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
   data: PropTypes.array.isRequired,

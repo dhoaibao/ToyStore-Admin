@@ -71,14 +71,12 @@ const Order = () => {
     {
       title: (
         <div className="text-center">
-          <span>Mã đơn hàng</span>
+          <span>Mã ĐH</span>
         </div>
       ),
       align: "center",
       dataIndex: "orderId",
       sorter: (a, b) => a.orderId - b.orderId,
-      render: (orderId) => `#${orderId}`,
-      width: "15%",
     },
     {
       title: (
@@ -102,7 +100,6 @@ const Order = () => {
         target: "sorter-icon",
       },
       sorter: (a, b) => a.finalPrice - b.finalPrice,
-      width: "15%",
     },
     {
       title: (
@@ -124,34 +121,64 @@ const Order = () => {
           <span>Trạng thái</span>
         </div>
       ),
-      dataIndex: ["orderStatus", "statusName"],
+      dataIndex: "orderStatus",
       align: "center",
       render: (status) => {
-        return <Tag color={getStatusColor(status)}>{status}</Tag>;
+        return (
+          <Tag color={getStatusColor(status.statusName)}>
+            {status.statusName}
+          </Tag>
+        );
       },
       filters: [
         {
           text: "Chờ xác nhận",
-          value: "Chờ xác nhận",
+          value: 1,
         },
         {
           text: "Đang xử lý",
-          value: "Đang xử lý",
+          value: 2,
         },
         {
           text: "Đang giao",
-          value: "Đang giao",
+          value: 3,
         },
         {
           text: "Đã giao",
-          value: "Đã giao",
+          value: 4,
         },
         {
           text: "Đã hủy",
-          value: "Đã hủy",
+          value: 5,
         },
       ],
-      onFilter: (value, record) => record.orderStatus.statusName === value,
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Thanh toán</span>
+        </div>
+      ),
+      dataIndex: "paymentStatus",
+      align: "center",
+      render: (paymentStatus) => {
+        return paymentStatus ? (
+          <Tag color="green">Đã thanh toán</Tag>
+        ) : (
+          <Tag color="red">Chờ thanh toán</Tag>
+        );
+      },
+      filters: [
+        {
+          text: "Đã thanh toán",
+          value: true,
+        },
+        {
+          text: "Chờ thanh toán",
+          value: false,
+        },
+      ],
+      filterMultiple: false,
     },
     {
       title: (
@@ -181,6 +208,9 @@ const Order = () => {
     <>
       <DataTable
         title="Đơn hàng"
+        searchPlaceholder={
+          "Nhập mã đơn hàng hoặc tên khách hàng để tìm kiếm..."
+        }
         data={orders}
         loading={loading}
         columns={columns}

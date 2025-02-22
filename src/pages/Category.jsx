@@ -134,6 +134,7 @@ const Category = () => {
     <>
       <DataTable
         title="Danh mục"
+        searchPlaceholder="Nhập tên danh mục để tìm kiếm..."
         data={categories}
         loading={loading}
         columns={columns}

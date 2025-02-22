@@ -1,10 +1,11 @@
-import { Table, Button, Input } from "antd";
+import { Button } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { brandService } from "../services";
 import moment from "moment";
-import { Pencil, Plus, RotateCcw } from "lucide-react";
+import { Pencil } from "lucide-react";
 import BrandForm from "../components/form/BrandForm";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import DataTable from "../components/common/DataTable";
 
 const Brand = () => {
   const [brands, setBrands] = useState([]);
@@ -12,18 +13,17 @@ const Brand = () => {
   const [open, setOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [fetchData, setFetchData] = useState(true);
-  const [totalPages, setTotalPages] = useState(0);
-  const [limit, setLimit] = useState(10);
-  const [total, setTotal] = useState(0);
-  const [searchText, setSearchText] = useState("");
+  const [pagination, setPagination] = useState({
+    totalPages: 0,
+    limit: 10,
+    total: 0,
+  });
 
-  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = useMemo(
     () => new URLSearchParams(location.search),
     [location.search]
   );
-  const page = searchParams.get("page") || 1;
 
   useEffect(() => {
     const fetchBrands = async () => {
@@ -35,9 +35,11 @@ const Brand = () => {
         setBrands(
           response.data.map((item) => ({ ...item, key: item.brandId }))
         );
-        setTotalPages(response.pagination.totalPages);
-        setLimit(response.pagination.limit);
-        setTotal(response.pagination.total);
+        setPagination({
+          totalPages: response.pagination.totalPages,
+          limit: response.pagination.limit,
+          total: response.pagination.total,
+        });
         setLoading(false);
         setFetchData(false);
       } catch (error) {
@@ -109,98 +111,17 @@ const Brand = () => {
     },
   ];
 
-  const handleRefresh = () => {
-    if (searchParams.toString() === "") {
-      setFetchData(true);
-    } else {
-      navigate({ search: "" });
-    }
-    setSearchText("");
-  };
-
-  const handleSearch = (value) => {
-    setSearchText(value);
-    if (value) {
-      searchParams.set("keyword", value);
-    } else {
-      searchParams.delete("keyword");
-    }
-    navigate({ search: searchParams.toString() });
-  };
-
-  const onChange = (pagination, _, sorter) => {
-    console.log("params", pagination, sorter);
-
-    if (sorter.order) {
-      searchParams.set("sort", sorter.field);
-      searchParams.set("order", sorter.order === "ascend" ? "asc" : "desc");
-    } else {
-      searchParams.delete("sort");
-      searchParams.delete("order");
-    }
-
-    if (pagination.current !== 1) {
-      searchParams.set("page", pagination.current);
-    } else {
-      searchParams.delete("page");
-    }
-    if (pagination.pageSize !== 10) {
-      searchParams.set("limit", pagination.pageSize);
-    } else {
-      searchParams.delete("limit");
-    }
-    navigate({ search: searchParams.toString() });
-  };
-
   return (
-    <div className="mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <p className="text-2xl font-bold">Thương hiệu</p>
-        <Button
-          type="primary"
-          onClick={() => {
-            setSelectedBrand(null);
-            setOpen(true);
-          }}
-        >
-          <Plus strokeWidth={1} size={20} />
-          Thêm mới
-        </Button>
-      </div>
-      <div className="flex justify-between items-center space-x-4 mb-4">
-        <Input.Search
-          placeholder="Nhập tên thương hiệu để tìm kiếm..."
-          enterButton
-          allowClear
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          onSearch={handleSearch}
-          className="w-1/3"
-        />
-        <Button onClick={handleRefresh}>
-          <RotateCcw strokeWidth={1} size={20} />
-        </Button>
-      </div>
-      <Table
-        bordered
+    <>
+      <DataTable
+        title="Thương hiệu"
+        data={brands}
         loading={loading}
         columns={columns}
-        dataSource={brands}
-        onChange={onChange}
-        rowClassName={(_, index) =>
-          index % 2 === 0 ? "table-row-light" : "table-row-gray"
-        }
-        showSorterTooltip={{
-          target: "sorter-icon",
-        }}
-        pagination={{
-          total: totalPages * 10,
-          current: page,
-          pageSize: limit,
-          showSizeChanger: true,
-          showTotal: () => `Tổng ${total} mục`,
-          position: ["bottomCenter"],
-        }}
+        setOpenForm={setOpen}
+        setSelectedItem={setSelectedBrand}
+        setFetchData={setFetchData}
+        pagination={pagination}
         expandable={{
           expandedRowRender: (record) => (
             <p className="m-0">
@@ -217,7 +138,7 @@ const Brand = () => {
         data={selectedBrand}
         setFetchData={setFetchData}
       />
-    </div>
+    </>
   );
 };
 

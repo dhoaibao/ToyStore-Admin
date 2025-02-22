@@ -34,9 +34,9 @@ const NavItem = ({ to, title, icon, children }) => {
   return (
     <div className="w-full">
       <div
-        className={`group flex justify-between cursor-pointer items-center md:text-sm font-bold p-2 rounded-md hover:bg-white hover:text-primary transition-colors duration-200 ${
-          isActive ? "bg-white text-primary" : ""
-        }`}
+        className={`group flex justify-between cursor-pointer items-center md:text-sm font-bold p-2 rounded-md hover:bg-white hover:text-primary transition-colors duration-200
+          ${isActive ? "bg-white text-primary" : ""}
+          ${isOpen ? "bg-blue-800" : ""}`}
         onClick={handleClick}
       >
         <div className="flex items-center space-x-2">

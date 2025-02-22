@@ -75,10 +75,12 @@ const Sidebar = () => {
   ];
   return (
     <div className="bg-primary text-white h-screen p-4 flex flex-col">
-      <div className="flex justify-center bg-white rounded-xl">
-        <img src="/src/assets/Logo(150x50).png" alt="Logo" className="h-12" />
+      <div className="sticky top-0 pt-4 z-10 bg-primary">
+        <div className="flex justify-center bg-white rounded-xl">
+          <img src="/src/assets/Logo(150x50).png" alt="Logo" className="h-12" />
+        </div>
+        <Divider className="bg-white" />
       </div>
-      <Divider className="bg-white bg-opacity-20" />
       <div className="flex-1 overflow-y-auto scrollbar-hide space-y-4">
         {menuItems.map((item, index) => (
           <NavItem key={index} to={item.to} title={item.title} icon={item.icon}>

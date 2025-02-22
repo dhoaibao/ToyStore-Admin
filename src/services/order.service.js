@@ -5,6 +5,10 @@ class OrderService {
         this.api = createApiClient(path);
     }
 
+    async getAllOrders(query) {
+        return (await this.api.get(`?${query}`)).data;
+    }
+
     async createOrder(data) {
         return (await this.api.post('/', data)).data;
     }

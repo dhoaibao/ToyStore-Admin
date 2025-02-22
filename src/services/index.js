@@ -10,3 +10,4 @@ export * from "./ghn.service";
 export * from "./order.service";
 export * from "./orderStatus.service"
 export * from "./voucher.service";
+export * from "./productInfo.service";

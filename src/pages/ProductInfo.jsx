@@ -1,17 +1,17 @@
 import { Button } from "antd";
 import { useState, useEffect, useMemo } from "react";
-import { categoryService } from "../services";
+import { productInformationService } from "../services";
 import moment from "moment";
 import { Pencil } from "lucide-react";
-import CategoryForm from "../components/form/CategoryForm";
+import ProductInfoForm from "../components/form/ProductInfoForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 
-const Category = () => {
-  const [categories, setCategories] = useState([]);
+const ProductInfo = () => {
+  const [productsInfo, setProductsInfo] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedProductInfo, setSelectedProductInfo] = useState(null);
   const [fetchData, setFetchData] = useState(true);
   const [pagination, setPagination] = useState({
     totalPages: 0,
@@ -26,14 +26,15 @@ const Category = () => {
   );
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchProductsInfo = async () => {
       setLoading(true);
       try {
-        const response = await categoryService.getAllCategories(
-          searchParams.toString()
-        );
-        setCategories(
-          response.data.map((item) => ({ ...item, key: item.categoryId }))
+        const response =
+          await productInformationService.getAllProductsInformation(
+            searchParams.toString()
+          );
+        setProductsInfo(
+          response.data.map((item) => ({ ...item, key: item.productInfoId }))
         );
         setPagination({
           totalPages: response.pagination.totalPages,
@@ -43,39 +44,21 @@ const Category = () => {
         setLoading(false);
         setFetchData(false);
       } catch (error) {
-        console.error("Failed to fetch category list: ", error.data);
+        console.error("Failed to fetch productInfo list: ", error.data);
         setLoading(false);
       }
     };
-    if (fetchData || searchParams) fetchCategories();
+    if (fetchData || searchParams) fetchProductsInfo();
   }, [fetchData, searchParams]);
 
   const columns = [
     {
       title: (
         <div className="text-center">
-          <span>Hình ảnh</span>
+          <span>Tên thương hiệu</span>
         </div>
       ),
-      dataIndex: "categoryThumbnail",
-      align: "center",
-      render: (categoryThumbnail) => (
-        <div className="flex justify-center">
-          <img
-            src={categoryThumbnail.url}
-            alt="category"
-            className="w-8 h-8 object-cover rounded-md"
-          />
-        </div>
-      ),
-    },
-    {
-      title: (
-        <div className="text-center">
-          <span>Tên danh mục</span>
-        </div>
-      ),
-      dataIndex: "categoryName",
+      dataIndex: "productInfoName",
     },
     {
       title: (
@@ -103,7 +86,6 @@ const Category = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      defaultSortOrder: "descend",
       sorter: (a, b) => new Date(a.updatedAt) - new Date(b.updatedAt),
     },
     {
@@ -119,7 +101,7 @@ const Category = () => {
           <Button
             type="text"
             onClick={() => {
-              setSelectedCategory(record);
+              setSelectedProductInfo(record);
               setOpen(true);
             }}
           >
@@ -133,23 +115,23 @@ const Category = () => {
   return (
     <>
       <DataTable
-        title="Danh mục"
-        data={categories}
+        title="Thông tin sản phẩm"
+        data={productsInfo}
         loading={loading}
         columns={columns}
         setOpenForm={setOpen}
-        setSelectedItem={setSelectedCategory}
+        setSelectedItem={setSelectedProductInfo}
         setFetchData={setFetchData}
         pagination={pagination}
       />
-      <CategoryForm
+      <ProductInfoForm
         open={open}
         setOpen={setOpen}
-        data={selectedCategory}
+        data={selectedProductInfo}
         setFetchData={setFetchData}
       />
     </>
   );
 };
 
-export default Category;
+export default ProductInfo;

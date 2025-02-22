@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { productService } from "../services";
 import moment from "moment";
@@ -98,16 +98,43 @@ const Product = () => {
         </div>
       ),
       align: "right",
-      dataIndex: "quantity",
-      render: (quantity, record) => (
+      dataIndex: "soldNumber",
+      render: (soldNumber, record) => (
         <>
-         {record.soldNumber}/ {quantity}
+         {record.quantity - soldNumber}/ {record.quantity}
         </>
       ),
       showSorterTooltip: {
         target: "sorter-icon",
       },
       sorter: (a, b) => a.price - b.price,
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Trạng thái</span>
+        </div>
+      ),
+      dataIndex: "visible",
+      align: "center",
+      render: (visible) => {
+        return visible ? (
+          <Tag color="blue">ACTIVE</Tag>
+        ) : (
+          <Tag color="gray">INACTIVE</Tag>
+        );
+      },
+      filters: [
+        {
+          text: "ACTIVE",
+          value: true,
+        },
+        {
+          text: "INACTIVE",
+          value: false,
+        },
+      ],
+      filterMultiple: false,
     },
     {
       title: (

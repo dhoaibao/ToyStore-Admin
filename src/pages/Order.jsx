@@ -152,6 +152,7 @@ const Order = () => {
           value: 5,
         },
       ],
+      filterMultiple: false,
     },
     {
       title: (

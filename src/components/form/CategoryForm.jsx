@@ -20,7 +20,7 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
         if (data.categoryThumbnail?.url) {
           const file = await fetchImage(
             data.categoryThumbnail.url,
-            data.categoryName
+            `category-thumbnail-${data.categoryThumbnailId}`
           );
           if (file) {
             setFileList([
@@ -67,7 +67,9 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
     setLoading(true);
     const formData = new FormData();
 
-    formData.append("categoryName", values.categoryName);
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
     if (fileList.length > 0 && fileList[0].originFileObj) {
       formData.append("file", fileList[0].originFileObj);
     }

@@ -3,8 +3,9 @@ import Login from "../pages/Login";
 import Product from "../pages/Product";
 import Category from "../pages/Category";
 import Brand from "../pages/Brand";
-import ProductInfo from "../pages/ProductInfo";
+import ProductInfo from "../pages/ProductInformation";
 import Order from "../pages/Order";
+import Promotion from "../pages/Promotion"
 
 const routes = [
   {
@@ -41,6 +42,11 @@ const routes = [
     id: "order",
     path: "/orders",
     element: <Order />,
+  },
+  {
+    id: "promotion",
+    path: "/promotions",
+    element: <Promotion />,
   },
 ];
 

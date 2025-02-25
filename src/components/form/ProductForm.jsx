@@ -57,6 +57,7 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
       onCancel={onClose}
       onOk={() => form.submit()}
       confirmLoading={loading}
+      centered
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item

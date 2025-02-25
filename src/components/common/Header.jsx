@@ -21,7 +21,7 @@ const Header = () => {
   };
 
   return (
-    <div className="flex items-center justify-end bg-white space-x-4 p-4 shadow-sm">
+    <div className="flex items-center justify-end bg-white space-x-4 p-4 shadow-sm sticky top-0 z-50">
       <Bell strokeWidth={1} />
       <button
         onClick={() => !isLogin && handleLogin}

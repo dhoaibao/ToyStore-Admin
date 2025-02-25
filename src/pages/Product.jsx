@@ -2,7 +2,7 @@ import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { productService } from "../services";
 import moment from "moment";
-import { Eye } from "lucide-react";
+import { Pencil } from "lucide-react";
 import ProductForm from "../components/form/ProductForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
@@ -68,6 +68,7 @@ const Product = () => {
           />
         </div>
       ),
+      width: "8%",
     },
     {
       title: (
@@ -76,6 +77,7 @@ const Product = () => {
         </div>
       ),
       dataIndex: "productName",
+      width: "40%",
     },
     {
       title: (
@@ -101,7 +103,7 @@ const Product = () => {
       dataIndex: "soldNumber",
       render: (soldNumber, record) => (
         <>
-         {record.quantity - soldNumber}/ {record.quantity}
+          {record.quantity - soldNumber}/ {record.quantity}
         </>
       ),
       showSorterTooltip: {
@@ -167,7 +169,7 @@ const Product = () => {
               setOpen(true);
             }}
           >
-            <Eye strokeWidth={1} size={20} color="blue" />
+            <Pencil strokeWidth={1} size={20} color="blue" />
           </Button>
         );
       },

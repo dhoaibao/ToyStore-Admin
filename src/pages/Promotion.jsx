@@ -68,6 +68,7 @@ const Promotion = () => {
           />
         </div>
       ),
+      width: "8%",
     },
     {
       title: (
@@ -76,6 +77,7 @@ const Promotion = () => {
         </div>
       ),
       dataIndex: "promotionName",
+      width: "30%",
     },
     {
       title: (

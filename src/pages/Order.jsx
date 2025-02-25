@@ -77,6 +77,7 @@ const Order = () => {
       align: "center",
       dataIndex: "orderId",
       sorter: (a, b) => a.orderId - b.orderId,
+      width: "8%",
     },
     {
       title: (
@@ -86,6 +87,7 @@ const Order = () => {
       ),
       align: "left",
       dataIndex: ["user", "fullName"],
+      width: "25%",
     },
     {
       title: (

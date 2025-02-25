@@ -28,6 +28,7 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
       if (data) {
         setLoadingImage(true);
         form.setFieldsValue(data);
+        setDiscountType(data.discountType);
 
         if (data.promotionThumbnail?.url) {
           const file = await fetchImage(

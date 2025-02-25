@@ -5,8 +5,9 @@ import Category from "../pages/Category";
 import Brand from "../pages/Brand";
 import ProductInfo from "../pages/ProductInformation";
 import Order from "../pages/Order";
-import Promotion from "../pages/Promotion"
+import Promotion from "../pages/Promotion";
 import Voucher from "../pages/Voucher";
+import User from "../pages/User";
 
 const routes = [
   {
@@ -53,6 +54,11 @@ const routes = [
     id: "voucher",
     path: "/vouchers",
     element: <Voucher />,
+  },
+  {
+    id: "user",
+    path: "/users",
+    element: <User />,
   },
 ];
 

@@ -5,6 +5,10 @@ class UserService {
         this.api = createApiClient(path);
     }
 
+    async getAllUsers(query) {
+        return (await this.api.get(`?${query}`)).data;
+    }
+
     async getLoggedInUser() {
         return (await this.api.get('/me')).data;
     }

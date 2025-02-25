@@ -5,20 +5,16 @@ class VoucherService {
         this.api = createApiClient(path);
     }
 
-    async getAllVouchers() {
-        return (await this.api.get('?limit=-1&status=valid')).data;
+    async getAllVouchers(query) {
+        return (await this.api.get(`?${query}`)).data;
     }
 
-    async collectVoucher(id) {
-        return (await this.api.post(`/collect/${id}`)).data;
+    async createVoucher(data) {
+        return (await this.api.post('/', data)).data;
     }
 
-    async getVoucherByUser() {
-        return (await this.api.get('/by-user')).data;
-    }
-
-    async getVoucherById(id) {
-        return (await this.api.get(`/${id}`)).data;
+    async updateVoucher(id, data) {
+        return (await this.api.put(`/${id}`, data)).data;
     }
 }
 

@@ -133,7 +133,8 @@ const DataTable = ({
         expandable={expandable}
         sticky
         scroll={{ y: "calc(100vh - 296px)" }}
-        tableLayout="auto"
+        tableLayout="fixed"
+        size="small"
       />
     </div>
   );

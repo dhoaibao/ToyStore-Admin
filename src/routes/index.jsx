@@ -6,6 +6,7 @@ import Brand from "../pages/Brand";
 import ProductInfo from "../pages/ProductInformation";
 import Order from "../pages/Order";
 import Promotion from "../pages/Promotion"
+import Voucher from "../pages/Voucher";
 
 const routes = [
   {
@@ -47,6 +48,11 @@ const routes = [
     id: "promotion",
     path: "/promotions",
     element: <Promotion />,
+  },
+  {
+    id: "voucher",
+    path: "/vouchers",
+    element: <Voucher />,
   },
 ];
 

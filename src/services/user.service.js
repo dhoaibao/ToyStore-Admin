@@ -6,24 +6,23 @@ class UserService {
     }
 
     async getAllUsers(query) {
-        return (await this.api.get(`?${query}`)).data;
+        const response = await this.api.get(`?${query}`);
+        return await response.json();
     }
 
     async getLoggedInUser() {
-        return (await this.api.get('/me')).data;
+        const response = await this.api.get('/me');
+        return await response.json();
     }
 
     async updateProfile(id, data) {
-        return (await this.api.put(`/${id}`, data,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })).data;
+        const response = await this.api.put(`/${id}`, data);
+        return await response.json();
     }
 
     async changePassword(data) {
-        return (await this.api.put('/change-password', data)).data;
+        const response = await this.api.put('/change-password', data);
+        return await response.json();
     }
 }
 

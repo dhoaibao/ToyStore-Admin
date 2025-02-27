@@ -6,9 +6,9 @@ class OrderStatusService {
     }
 
     async getAllOrderStatuses() {
-        return (await this.api.get('/')).data;
+        const response = await this.api.get('/');
+        return await response.json();
     }
-
 }
 
 export const orderStatusService = new OrderStatusService();

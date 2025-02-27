@@ -6,19 +6,23 @@ class CartService {
     }
 
     async addToCart(data) {
-        return (await this.api.post('/', data)).data;
+        const response = await this.api.post('/', data);
+        return await response.json();
     }
 
     async getCartByUser() {
-        return (await this.api.get('/')).data;
+        const response = await this.api.get('/');
+        return await response.json();
     }
 
     async updateCartItem(data) {
-        return (await this.api.put('/', data)).data;
+        const response = await this.api.put('/', data);
+        return await response.json();
     }
 
     async removeFromCart(id) {
-        return (await this.api.delete(`/${id}`)).data;
+        const response = await this.api.delete(`/${id}`);
+        return await response.json();
     }
 }
 

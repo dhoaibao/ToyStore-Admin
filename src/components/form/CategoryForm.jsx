@@ -84,7 +84,7 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
       }
       setFetchData(true);
     } catch (error) {
-      if (error.response.data.message === "Category already exists!") {
+      if (error.message === "Category already exists!") {
         message.error("Danh mục đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");

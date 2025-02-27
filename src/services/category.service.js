@@ -6,23 +6,18 @@ class CategoryService {
     }
 
     async getAllCategories(query) {
-        return (await this.api.get(`?${query}`)).data;
+        const response = await this.api.get(`?${query}`);
+        return await response.json();
     }
 
     async createCategory(data) {
-        return (await this.api.post('/', data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })).data;
+        const response = await this.api.post('/', data);
+        return await response.json();
     }
 
     async updateCategory(id, data) {
-        return (await this.api.put(`/${id}`, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })).data;
+        const response = await this.api.put(`/${id}`, data);
+        return await response.json();
     }
 }
 

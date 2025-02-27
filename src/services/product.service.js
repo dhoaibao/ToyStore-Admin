@@ -6,36 +6,28 @@ class ProductService {
     }
 
     async getAllProducts(query) {
-        return (await this.api.get(`/?${query}`)).data;
+        const response = await this.api.get(`?${query}`);
+        return await response.json();
     }
 
     async getProductBySlug(slug) {
-        return (await this.api.get(`/${slug}`)).data;
+        const response = await this.api.get(`/${slug}`);
+        return await response.json();
     }
 
     async createProduct(data) {
-        return (await this.api.post('/', data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })).data;
+        const response = await this.api.post('/', data);
+        return await response.json();
     }
 
     async updateProduct(id, data) {
-        return (await this.api.put(`/${id}`, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })).data;
+        const response = await this.api.put(`/${id}`, data);
+        return await response.json();
     }
 
     async imageSearch(data) {
-        return (await this.api.post('/image-search', data,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })).data;
+        const response = await this.api.post('/image-search', data);
+        return await response.json();
     }
 }
 

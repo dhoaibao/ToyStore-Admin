@@ -6,19 +6,23 @@ class AddressService {
     }
 
     async addAddress(data) {
-        return (await this.api.post('/', data)).data;
+        const response = await this.api.post('/', data);
+        return await response.json();
     }
 
     async getAddressByUser() {
-        return (await this.api.get('/user')).data;
+        const response = await this.api.get('/user');
+        return await response.json();
     }
 
     async updateAddress(id, data) {
-        return (await this.api.put(`/${id}`, data)).data;
+        const response = await this.api.put(`/${id}`, data);
+        return await response.json();
     }
 
-    async deleteAddress(id, data) {
-        return (await this.api.delete(`/${id}`, data)).data;
+    async deleteAddress(id) {
+        const response = await this.api.delete(`/${id}`);
+        return await response.json();
     }
 }
 

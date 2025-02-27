@@ -6,23 +6,28 @@ class OrderService {
     }
 
     async getAllOrders(query) {
-        return (await this.api.get(`?${query}`)).data;
+        const response = await this.api.get(`?${query}`);
+        return await response.json();
     }
 
     async createOrder(data) {
-        return (await this.api.post('/', data)).data;
+        const response = await this.api.post('/', data);
+        return await response.json();
     }
 
     async getOrderByUser(query) {
-        return (await this.api.get(`/by-user?${query}`)).data;
+        const response = await this.api.get(`/by-user?${query}`);
+        return await response.json();
     }
 
     async getOrderById(id) {
-        return (await this.api.get(`/${id}`)).data;
+        const response = await this.api.get(`/${id}`);
+        return await response.json();
     }
 
     async cancelOrder(id) {
-        return (await this.api.put(`/cancel/${id}`)).data;
+        const response = await this.api.put(`/cancel/${id}`);
+        return await response.json();
     }
 }
 

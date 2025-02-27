@@ -6,23 +6,18 @@ class PromotionService {
     }
 
     async getAllPromotions(query) {
-        return (await this.api.get(`?${query}`)).data;
+        const response = await this.api.get(`?${query}`);
+        return await response.json();
     }
 
     async createPromotion(data) {
-        return (await this.api.post('/', data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })).data;
+        const response = await this.api.post('/', data);
+        return await response.json();
     }
 
     async updatePromotion(id, data) {
-        return (await this.api.put(`/${id}`, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })).data;
+        const response = await this.api.put(`/${id}`, data);
+        return await response.json();
     }
 }
 

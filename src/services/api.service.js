@@ -1,81 +1,78 @@
-import axios from 'axios';
-
 const baseURL = import.meta.env.VITE_APP_API_URL;
 
 const createApiClient = (path) => {
-  const api = axios.create({
-    baseURL: `${baseURL}${path}`,
-    headers: {
+  const getHeaders = (options = {}, token) => {
+    const defaultHeaders = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-    },
-  });
+    };
+    const headers = options.body instanceof FormData
+      ? {}
+      : defaultHeaders;
 
-  // Request interceptor to add the Authorization header
-  api.interceptors.request.use(
-    (config) => {
-      const accessToken = localStorage.getItem('accessToken');
-      if (accessToken) {
-        config.headers['Authorization'] = `Bearer ${accessToken}`;
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
     }
-  );
 
-  // Response interceptor to handle token refresh
-  api.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    async (error) => {
-      console.log('Error:', error.response);
-      const originalRequest = error.config;
-      const refreshToken = localStorage.getItem('refreshToken');
+    return headers;
+  };
 
-      if (
-        error.response &&
-        error.response.data.message === 'Token has expired' &&
-        !originalRequest._retry &&
-        refreshToken
-      ) {
-        originalRequest._retry = true;
+  const refreshToken = async (currentRefreshToken) => {
+    const response = await fetch(`${baseURL}/auth/refresh-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken: currentRefreshToken }),
+    });
 
+    if (!response.ok) throw new Error('Refresh token failed');
+
+    const { token } = await response.json();
+    localStorage.setItem('accessToken', token.accessToken);
+    localStorage.setItem('refreshToken', token.refreshToken);
+    return token.accessToken;
+  };
+
+  const apiFetch = async (endpoint, options = {}) => {
+    const url = `${baseURL}${path}${endpoint}`;
+    const headers = getHeaders(options, localStorage.getItem('accessToken'));
+    const body = options.body instanceof FormData
+      ? options.body
+      : options.body ? JSON.stringify(options.body) : undefined;
+
+    let response = await fetch(url, { ...options, headers, body });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      const refreshTokenValue = localStorage.getItem('refreshToken');
+
+      if (errorData.message === 'Token has expired' && refreshTokenValue && !options._retry) {
         try {
-          const response = await axios.post(`${baseURL}/auth/refresh-token`, {
-            refreshToken: refreshToken,
-          });
-
-          // console.log('Làm mới token thành công:', response.data.token);
-
-          const newAccessToken = response.data.token.accessToken;
-          const newRefreshToken = response.data.token.refreshToken;
-
-          localStorage.setItem('accessToken', newAccessToken);
-          localStorage.setItem('refreshToken', newRefreshToken);
-
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
-          return axios(originalRequest);
+          const newAccessToken = await refreshToken(refreshTokenValue);
+          const retryHeaders = getHeaders(options, newAccessToken);
+          response = await fetch(url, { ...options, headers: retryHeaders, body });
         } catch (refreshError) {
-          if (
-            refreshError.response &&
-            refreshError.response.data.message === 'Token has expired'
-          ) {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            window.location.href = '/login';
-            return Promise.reject(refreshError);
-          }
+          console.error('Refresh token error:', refreshError);
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          window.location.href = '/auth/login';
+          throw refreshError;
         }
       }
-      return Promise.reject(error);
-    }
-  );
 
-  return api;
+      if (!response.ok) {
+        throw new Error(errorData.message || 'API request failed');
+      }
+    }
+
+    return response;
+  };
+
+  return {
+    get: (endpoint) => apiFetch(endpoint, { method: 'GET' }),
+    post: (endpoint, body, config) => apiFetch(endpoint, { method: 'POST', body, ...config }),
+    put: (endpoint, body, config) => apiFetch(endpoint, { method: 'PUT', body, ...config }),
+    delete: (endpoint) => apiFetch(endpoint, { method: 'DELETE' }),
+  };
 };
 
 export default createApiClient;

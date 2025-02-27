@@ -6,32 +6,38 @@ class AuthService {
     }
 
     async signIn(data) {
-        return (await this.api.post('/sign-in', data)).data;
+        const response = await this.api.post('/sign-in', data);
+        return await response.json();
     }
 
     async signUp(data) {
-        return (
-            await this.api.post('/sign-up', data)).data;
+        const response = await this.api.post('/sign-up', data);
+        return await response.json();
     }
 
     async verifyEmail(data) {
-        return (await this.api.post('/verify-email', data)).data;
+        const response = await this.api.post('/verify-email', data);
+        return await response.json();
     }
 
     async resendOtp(data) {
-        return (await this.api.post('/resend-otp', data)).data;
+        const response = await this.api.post('/resend-otp', data);
+        return await response.json();
     }
 
     async resetPassword(data) {
-        return (await this.api.post('/reset-password', data)).data;
+        const response = await this.api.post('/reset-password', data);
+        return await response.json();
     }
 
     async verifyResetPassword(data) {
-        return (await this.api.post('/verify-reset-password', data)).data;
+        const response = await this.api.post('/verify-reset-password', data);
+        return await response.json();
     }
 
     async signInWithGoogle(data) {
-        return (await this.api.post('/sign-in-with-google', data)).data;
+        const response = await this.api.post('/sign-in-with-google', data);
+        return await response.json();
     }
 }
 

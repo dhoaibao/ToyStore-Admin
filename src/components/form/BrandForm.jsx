@@ -37,7 +37,7 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
       }
       setFetchData(true);
     } catch (error) {
-      if (error.response.data.message === "Brand already exists!") {
+      if (error === "Brand already exists!") {
         message.error("Thương hiệu đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");

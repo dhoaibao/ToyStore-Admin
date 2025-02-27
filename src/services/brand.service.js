@@ -6,15 +6,18 @@ class BrandService {
     }
 
     async getAllBrands(query) {
-        return (await this.api.get(`?${query}`)).data;
+        const response = await this.api.get(`?${query}`);
+        return await response.json();
     }
 
     async createBrand(data) {
-        return (await this.api.post('/', data)).data;
+        const response = await this.api.post('/', data);
+        return await response.json();
     }
 
     async updateBrand(id, data) {
-        return (await this.api.put(`/${id}`, data)).data;
+        const response = await this.api.put(`/${id}`, data);
+        return await response.json();
     }
 }
 

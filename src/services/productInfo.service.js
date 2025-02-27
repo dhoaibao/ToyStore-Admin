@@ -6,15 +6,18 @@ class ProductInformationService {
     }
 
     async getAllProductsInformation(query) {
-        return (await this.api.get(`?${query}`)).data;
+        const response = await this.api.get(`?${query}`);
+        return await response.json();
     }
 
     async createProductInformation(data) {
-        return (await this.api.post('/', data)).data;
+        const response = await this.api.post('/', data);
+        return await response.json();
     }
 
     async updateProductInformation(id, data) {
-        return (await this.api.put(`/${id}`, data)).data;
+        const response = await this.api.put(`/${id}`, data);
+        return await response.json();
     }
 }
 

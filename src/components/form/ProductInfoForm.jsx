@@ -41,7 +41,7 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
       setFetchData(true);
     } catch (error) {
       if (
-        error.response.data.message === "Product information already exists!"
+        error === "Product information already exists!"
       ) {
         message.error("Thông tin sản phẩm đã tồn tại!");
       } else {

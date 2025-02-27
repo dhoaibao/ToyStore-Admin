@@ -1,50 +1,63 @@
-import axios from "axios";
-
 const TOKEN = import.meta.env.VITE_GHN_TOKEN_API;
 const SHOP_ID = import.meta.env.VITE_GHN_SHOP_ID;
+const baseURL = "https://dev-online-gateway.ghn.vn/shiip/public-api/";
 
-const apiClient = axios.create({
-    baseURL: "https://dev-online-gateway.ghn.vn/shiip/public-api/",
-    headers: {
+// Hàm fetch cơ bản với headers mặc định
+const apiFetch = async (endpoint, options = {}) => {
+    const url = `${baseURL}${endpoint}`;
+    const headers = {
         Accept: "application/json",
         "Content-Type": "application/json",
         "token": TOKEN,
-    },
-});
+        ...options.headers, // Cho phép ghi đè headers nếu cần
+    };
+
+    const body = options.body ? JSON.stringify(options.body) : undefined;
+
+    const response = await fetch(url, {
+        ...options,
+        headers,
+        body,
+    });
+
+    if (!response.ok) {
+        throw new Error(`API request failed: ${response.statusText}`);
+    }
+
+    return await response.json();
+};
 
 class GHN {
     async getProvinces() {
-        const response = await apiClient.get('/master-data/province');
-        return response.data;
+        return await apiFetch('/master-data/province', { method: 'GET' });
     }
 
     async getDistricts(provinceId) {
-        const response = await apiClient.get(`/master-data/district?province_id=${provinceId}`);
-        return response.data;
+        return await apiFetch(`/master-data/district?province_id=${provinceId}`, { method: 'GET' });
     }
 
     async getWards(districtId) {
-        const response = await apiClient.get(`/master-data/ward?district_id=${districtId}`);
-        return response.data;
+        return await apiFetch(`/master-data/ward?district_id=${districtId}`, { method: 'GET' });
     }
 
     async getService(districtId) {
-        const response = await apiClient.post('/v2/shipping-order/available-services',
-            {
+        return await apiFetch('/v2/shipping-order/available-services', {
+            method: 'POST',
+            body: {
                 shop_id: parseInt(SHOP_ID),
                 from_district: 1572,
-                to_district: districtId
-            }
-        );
-        return response.data;
+                to_district: districtId,
+            },
+        });
     }
 
     async getShippingFee(address, quantity) {
-        console.log(address)
+        console.log(address);
         const services = await this.getService(address.districtId);
 
-        const response = await apiClient.post('/v2/shipping-order/fee',
-            {
+        const feeData = await apiFetch('/v2/shipping-order/fee', {
+            method: 'POST',
+            body: {
                 shop_id: parseInt(SHOP_ID),
                 service_id: services.data[0].service_id,
                 service_type_id: services.data[0].service_type_id,
@@ -53,9 +66,9 @@ class GHN {
                 to_district_id: address.districtId,
                 to_ward_code: address.wardCode,
                 weight: 200 * quantity,
-            }
-        );
-        return response.data.data.total;
+            },
+        });
+        return feeData.data.total;
     }
 }
 

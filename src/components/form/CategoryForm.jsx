@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Upload, Button, message } from "antd";
+import { Modal, Form, Input, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import fetchImage from "../../utils/fetchImage";
 import { categoryService } from "../../services";
@@ -128,15 +128,17 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
         >
           <Upload
             fileList={fileList}
-            listType="picture"
+            listType="picture-card"
             maxCount={1}
             accept="image/*"
             beforeUpload={() => false}
             onChange={handleUploadChange}
             onRemove={handleRemove}
           >
-            {fileList.length === 0 && (
-              <Button icon={<UploadOutlined />}>Tải lên</Button>
+            {fileList.length < 1 && (
+              <div className="flex-col">
+                <UploadOutlined /> <p>Tải lên</p>
+              </div>
             )}
           </Upload>
         </Form.Item>

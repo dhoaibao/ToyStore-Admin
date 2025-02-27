@@ -5,7 +5,6 @@ import {
   Form,
   Input,
   Upload,
-  Button,
   message,
   InputNumber,
   Select,
@@ -191,14 +190,18 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
             >
               <Upload
                 fileList={fileList}
-                listType="picture"
+                listType="picture-card"
                 maxCount={10}
                 accept="image/*"
                 beforeUpload={() => false}
                 onChange={handleUploadChange}
                 onRemove={handleRemove}
               >
-                <Button icon={<UploadOutlined />}>Tải lên</Button>
+                {fileList.length < 10 && (
+                  <div className="flex-col">
+                    <UploadOutlined /> <p>Tải lên</p>
+                  </div>
+                )}
               </Upload>
             </Form.Item>
             <Form.Item

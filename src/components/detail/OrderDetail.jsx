@@ -35,6 +35,7 @@ const OrderDetail = ({ open, setOpen, data }) => {
       className="overflow-y-auto max-h-screen"
     >
       <Steps
+        onChange={(current) => console.log(current)}
         className="p-4 pb-6"
         status={stepStatus}
         size="small"

@@ -1,8 +1,9 @@
 import { Button, Tag, Avatar } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { userService } from "../services";
-import { Pencil } from "lucide-react";
+import { Pencil, Eye } from "lucide-react";
 import UserForm from "../components/form/UserForm";
+import UserDetail from "../components/detail/UserDetail";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { generateAvatar, getSortOrder } from "../utils";
@@ -11,6 +12,7 @@ const User = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openInfo, setOpenInfo] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [fetchData, setFetchData] = useState(true);
   const [pagination, setPagination] = useState({
@@ -77,7 +79,7 @@ const User = () => {
             <Avatar
               src={avatar?.url}
               alt="U"
-              className="w-8 h-8 object-cover rounded-md"
+              className="w-10 h-10 object-cover rounded-full"
               style={{
                 backgroundColor: avatar?.url ? "transparent" : color,
                 fontSize: 16,
@@ -147,15 +149,26 @@ const User = () => {
       align: "center",
       render: (_, record) => {
         return (
-          <Button
-            type="text"
-            onClick={() => {
-              setSelectedUser(record);
-              setOpen(true);
-            }}
-          >
-            <Pencil strokeWidth={1} size={20} color="blue" />
-          </Button>
+          <>
+            <Button
+              type="text"
+              onClick={() => {
+                setSelectedUser(record);
+                setOpen(true);
+              }}
+            >
+              <Pencil strokeWidth={1} size={20} color="blue" />
+            </Button>
+            <Button
+              type="text"
+              onClick={() => {
+                setSelectedUser(record);
+                setOpenInfo(true);
+              }}
+            >
+              <Eye strokeWidth={1} size={20} color="blue" />
+            </Button>
+          </>
         );
       },
     },
@@ -180,6 +193,7 @@ const User = () => {
         data={selectedUser}
         setFetchData={setFetchData}
       />
+      <UserDetail open={openInfo} setOpen={setOpenInfo} data={selectedUser} />
     </>
   );
 };

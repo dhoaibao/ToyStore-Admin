@@ -79,7 +79,7 @@ const User = () => {
             <Avatar
               src={avatar?.url}
               alt="U"
-              className="w-10 h-10 object-cover rounded-full"
+              className="w-8 h-8 object-cover rounded-full"
               style={{
                 backgroundColor: avatar?.url ? "transparent" : color,
                 fontSize: 16,

@@ -310,12 +310,16 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                   ]}
                 >
                   <AutoComplete
-                    options={productInformation.productInfoDetails.map(
-                      (item) => ({
-                        value: item.value,
-                        label: item.value,
-                      })
-                    )}
+                    options={Array.from(
+                      new Set(
+                        productInformation.productInfoDetails.map(
+                          (item) => item.value
+                        )
+                      )
+                    ).map((value) => ({
+                      value: value,
+                      label: value,
+                    }))}
                   />
                 </Form.Item>
               ))}

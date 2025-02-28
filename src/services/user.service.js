@@ -15,6 +15,11 @@ class UserService {
         return await response.json();
     }
 
+    async createUser(data) {
+        const response = await this.api.post('/', data);
+        return await response.json();
+    }
+
     async updateProfile(id, data) {
         const response = await this.api.put(`/${id}`, data);
         return await response.json();

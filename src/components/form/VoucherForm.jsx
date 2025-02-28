@@ -48,7 +48,7 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
       }
       setFetchData(true);
     } catch (error) {
-      if (error.response.data.message === "Voucher code already exists!") {
+      if (error.data.message === "Voucher code already exists!") {
         message.error("Mã giảm giá đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
@@ -69,6 +69,8 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
       onOk={() => form.submit()}
       confirmLoading={loading}
       centered
+      okText="Lưu"
+      cancelText="Hủy"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <div className="flex flex-row space-x-2">
@@ -81,11 +83,12 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
             <Input />
           </Form.Item>
           <Form.Item
+            className="w-1/2"
             label="Số lượng:"
             name="quantity"
             rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
           >
-            <InputNumber min={1} />
+            <InputNumber className="w-full" min={1} />
           </Form.Item>
         </div>
         <div className="flex flex-row space-x-2">

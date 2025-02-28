@@ -50,7 +50,7 @@ const DataTable = ({
 
     if (filters) {
       Object.keys(filters).forEach((key) => {
-        if (filters[key]) {
+        if (filters[key] !== undefined && filters[key].length > 0) {
           searchParams.set(key, filters[key]);
         } else {
           searchParams.delete(key);

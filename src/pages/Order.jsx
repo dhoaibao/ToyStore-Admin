@@ -6,6 +6,8 @@ import { Eye } from "lucide-react";
 import OrderForm from "../components/form/OrderForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
+import ORDER_STATUS from "../constants/orderStatus";
+import { getSortOrder } from "../utils";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -50,23 +52,6 @@ const Order = () => {
     if (fetchData || searchParams) fetchOrders();
   }, [fetchData, searchParams]);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Chờ xác nhận":
-        return "orange";
-      case "Đang xử lý":
-        return "yellow";
-      case "Đang giao":
-        return "blue";
-      case "Đã giao":
-        return "green";
-      case "Đã hủy":
-        return "red";
-      default:
-        return "gray";
-    }
-  };
-
   const columns = [
     {
       title: (
@@ -76,8 +61,9 @@ const Order = () => {
       ),
       align: "center",
       dataIndex: "orderId",
-      sorter: (a, b) => a.orderId - b.orderId,
       width: "8%",
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "orderId"),
     },
     {
       title: (
@@ -101,7 +87,8 @@ const Order = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => a.finalPrice - b.finalPrice,
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "finalPrice"),
     },
     {
       title: (
@@ -115,7 +102,8 @@ const Order = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "createdAt"),
     },
     {
       title: (
@@ -125,35 +113,20 @@ const Order = () => {
       ),
       dataIndex: "orderStatus",
       align: "center",
-      render: (status) => {
+      render: (_, record) => {
+        const status =
+          record.orderTrackings[record.orderTrackings.length - 1].orderStatus;
         return (
-          <Tag color={getStatusColor(status.statusName)}>
-            {status.statusName}
+          <Tag color={ORDER_STATUS[status.statusName].color}>
+            {ORDER_STATUS[status.statusName].label}
           </Tag>
         );
       },
-      filters: [
-        {
-          text: "Chờ xác nhận",
-          value: 1,
-        },
-        {
-          text: "Đang xử lý",
-          value: 2,
-        },
-        {
-          text: "Đang giao",
-          value: 3,
-        },
-        {
-          text: "Đã giao",
-          value: 4,
-        },
-        {
-          text: "Đã hủy",
-          value: 5,
-        },
-      ],
+      filters: Object.values(ORDER_STATUS).map(({ label, key }) => ({
+        text: label,
+        value: key,
+      })),
+      filteredValue: [searchParams.get("orderStatus")],
       filterMultiple: false,
     },
     {
@@ -181,6 +154,7 @@ const Order = () => {
           value: false,
         },
       ],
+      filteredValue: [searchParams.get("paymentStatus")],
       filterMultiple: false,
     },
     {

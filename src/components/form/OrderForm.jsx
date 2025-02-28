@@ -37,7 +37,7 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
       }
       setFetchData(true);
     } catch (error) {
-      if (error.response.data.message === "Brand already exists!") {
+      if (error.data.message === "Brand already exists!") {
         message.error("Thương hiệu đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
@@ -58,6 +58,8 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
       onOk={() => form.submit()}
       confirmLoading={loading}
       centered
+      okText="Lưu"
+      cancelText="Hủy"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item

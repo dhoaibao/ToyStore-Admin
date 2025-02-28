@@ -6,6 +6,7 @@ import { Pencil } from "lucide-react";
 import VoucherForm from "../components/form/VoucherForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
+import { getSortOrder } from "../utils";
 
 const Voucher = () => {
   const [vouchers, setVouchers] = useState([]);
@@ -77,6 +78,7 @@ const Voucher = () => {
         { text: "Phần trăm", value: "percentage" },
         { text: "Cố định", value: "fixed_amount" },
       ],
+      filteredValue: [searchParams.get("discountType")],
       filterMultiple: false,
     },
     {
@@ -107,7 +109,8 @@ const Voucher = () => {
           {collectedQuantity}/{record.quantity}
         </p>
       ),
-      sorter: (a, b) => a.collectedQuantity - b.collectedQuantity,
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "collectedQuantity")
     },
     {
       title: (
@@ -117,7 +120,8 @@ const Voucher = () => {
       ),
       align: "center",
       dataIndex: "currentUsedQuantity",
-      sorter: (a, b) => a.currentUsedQuantity - b.currentUsedQuantity,
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "currentUsedQuantity")
     },
     {
       title: (
@@ -131,7 +135,8 @@ const Voucher = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "startDate")
     },
     {
       title: (
@@ -145,7 +150,8 @@ const Voucher = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => new Date(a.endDate) - new Date(b.endDate),
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "endDate")
     },
     {
       title: (

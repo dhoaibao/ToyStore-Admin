@@ -5,7 +5,7 @@ import ChangePassword from "./ChangePassword";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import generateAvatar from "../../utils/generateAvatar";
+import {generateAvatar} from "../../utils";
 
 const ProfileDropdown = () => {
   const [profileOpen, setProfileOpen] = useState(false);

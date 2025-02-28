@@ -1,10 +1,11 @@
-import { Button, Tag } from "antd";
+import { Button, Tag, Avatar } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { userService } from "../services";
 import { Pencil } from "lucide-react";
 import UserForm from "../components/form/UserForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
+import { generateAvatar, getSortOrder } from "../utils";
 
 const User = () => {
   const [users, setUsers] = useState([]);
@@ -55,6 +56,8 @@ const User = () => {
       dataIndex: "userId",
       align: "center",
       width: "5%",
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "userId"),
     },
     {
       title: (
@@ -64,15 +67,27 @@ const User = () => {
       ),
       dataIndex: "avatar",
       align: "center",
-      render: (avatar) => (
-        <div className="flex justify-center">
-          <img
-            src={avatar.url}
-            alt="category"
-            className="w-8 h-8 object-cover rounded-md"
-          />
-        </div>
-      ),
+      render: (avatar, record) => {
+        const { color, initial } = generateAvatar(
+          record.email,
+          record.fullName
+        );
+        return (
+          <div className="flex justify-center">
+            <Avatar
+              src={avatar?.url}
+              alt="U"
+              className="w-8 h-8 object-cover rounded-md"
+              style={{
+                backgroundColor: avatar?.url ? "transparent" : color,
+                fontSize: 16,
+              }}
+            >
+              {!avatar?.url && initial}
+            </Avatar>
+          </div>
+        );
+      },
     },
     {
       title: (
@@ -82,6 +97,8 @@ const User = () => {
       ),
       dataIndex: "fullName",
       width: "25%",
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "fullName"),
     },
     {
       title: (
@@ -117,6 +134,7 @@ const User = () => {
           value: false,
         },
       ],
+      filteredValue: [searchParams.get("isActive")],
       filterMultiple: false,
     },
     {

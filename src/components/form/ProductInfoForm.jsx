@@ -40,9 +40,7 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
       }
       setFetchData(true);
     } catch (error) {
-      if (
-        error === "Product information already exists!"
-      ) {
+      if (error === "Product information already exists!") {
         message.error("Thông tin sản phẩm đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
@@ -65,6 +63,8 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
       onOk={() => form.submit()}
       confirmLoading={loading}
       centered
+      okText="Lưu"
+      cancelText="Hủy"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item

@@ -9,7 +9,7 @@ export const getLoggedInUser = () => {
       dispatch(setUser(user.data));
       dispatch(setError(null));
     } catch (error) {
-      console.error("Error fetching logged-in user:", error.response?.data || error.message);
+      console.error("Error fetching logged-in user:", error?.data || error.message);
       dispatch(setError(error.message || "Failed to fetch user data."));
     } finally {
       dispatch(setLoading(false));
@@ -25,8 +25,8 @@ export const updateProfile = (userId, data) => {
       dispatch(setUser(response.data));
     }
     catch (error) {
-      console.error("Update profile error:", error.response?.data);
-      dispatch(setError(error.response?.data?.message || "Failed to update profile."));
+      console.error("Update profile error:", error?.data);
+      dispatch(setError(error?.data?.message || "Failed to update profile."));
     }
     finally {
       dispatch(setLoading(false));

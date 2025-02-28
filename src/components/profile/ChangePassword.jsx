@@ -31,7 +31,7 @@ const ChangePassword = ({ open, setOpen }) => {
     } catch (error) {
       console.error("Change password error:", error);
       message.error(
-        error.response?.data?.message || "Thay đổi mật khẩu thất bại."
+        error?.data?.message || "Thay đổi mật khẩu thất bại."
       );
     } finally {
       setLoading(false);

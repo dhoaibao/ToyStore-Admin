@@ -9,9 +9,10 @@ import {
   InputNumber,
   Select,
   Switch,
+  AutoComplete,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import fetchImage from "../../utils/fetchImage";
+import { fetchImage } from "../../utils";
 import {
   productService,
   brandService,
@@ -23,13 +24,14 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingImage, setLoadingImage] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [productsInformation, setProductsInformation] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoadingData(true);
       const brands = await brandService.getAllBrands();
       const categories = await categoryService.getAllCategories();
       const productsInformation =
@@ -40,7 +42,6 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
       setProductsInformation(productsInformation.data);
 
       if (data) {
-        setLoadingImage(true);
         const initialValues = {
           ...data,
           ...data.productInfoValues.reduce((acc, item) => {
@@ -54,11 +55,8 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
         if (data.productImages?.length > 0) {
           const files = await Promise.all(
             data.productImages.map(async (image, index) => {
-              if (image.uploadImage.url) {
-                return await fetchImage(
-                  image.uploadImage.url,
-                  `product-image-${index}`
-                );
+              if (image.url) {
+                return await fetchImage(image.url, `product-image-${index}`);
               }
               return null;
             })
@@ -76,11 +74,11 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
         } else {
           setFileList([]);
         }
-        setLoadingImage(false);
       } else {
         form.resetFields();
         setFileList([]);
       }
+      setLoadingData(false);
     };
 
     if (open) fetchData();
@@ -141,7 +139,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
       }
       setFetchData(true);
     } catch (error) {
-      if (error.response.data.message === "Product already exists!") {
+      if (error === "Product already exists!") {
         message.error("Sản phẩm đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
@@ -158,12 +156,15 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
       maskClosable={false}
       title={data ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới"}
       open={open}
-      // loading={loadingImage}
+      loading={loadingData}
       onCancel={onClose}
       onOk={() => form.submit()}
       confirmLoading={loading}
       centered
-      width={1000}
+      width={900}
+      className="overflow-auto max-h-screen"
+      okText="Lưu"
+      cancelText="Hủy"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <div className="flex flex-row space-x-4">
@@ -211,7 +212,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 { required: true, message: "Vui lòng nhập mô tả sản phẩm" },
               ]}
             >
-              <Input.TextArea autoSize={{ minRows: 3, maxRows: 12 }} />
+              <Input.TextArea autoSize={{ minRows: 10, maxRows: 10 }} />
             </Form.Item>
           </div>
           <div className="w-1/2">
@@ -282,7 +283,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
             </div>
             <Form.Item
               label="Trạng thái:"
-              name="visible"
+              name="isActive"
               valuePropName="checked"
               initialValue={true}
               rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
@@ -294,16 +295,31 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
               />
             </Form.Item>
 
-            {productsInformation.map((productInformation) => (
-              <Form.Item
-                className="mb-1"
-                key={productInformation.productInfoId}
-                label={productInformation.productInfoName}
-                name={`productInfoValues_${productInformation.productInfoName}`}
-              >
-                <Input />
-              </Form.Item>
-            ))}
+            <div className="flex flex-wrap">
+              {productsInformation.map((productInformation) => (
+                <Form.Item
+                  className="w-1/2 pr-2"
+                  key={productInformation.productInfoId}
+                  label={productInformation.productInfoName}
+                  name={`productInfoValues_${productInformation.productInfoName}`}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Vui lòng nhập ${productInformation.productInfoName}`,
+                    },
+                  ]}
+                >
+                  <AutoComplete
+                    options={productInformation.productInfoDetails.map(
+                      (item) => ({
+                        value: item.value,
+                        label: item.value,
+                      })
+                    )}
+                  />
+                </Form.Item>
+              ))}
+            </div>
           </div>
         </div>
       </Form>

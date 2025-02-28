@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { Modal, Form, Input, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import fetchImage from "../../utils/fetchImage";
+import {fetchImage} from "../../utils";
 import { categoryService } from "../../services";
 
 const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
@@ -106,6 +106,8 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
       onOk={() => form.submit()}
       confirmLoading={loading}
       centered
+      okText="Lưu"
+      cancelText="Hủy"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item

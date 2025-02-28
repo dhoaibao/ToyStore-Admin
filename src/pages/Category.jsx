@@ -6,6 +6,7 @@ import { Pencil } from "lucide-react";
 import CategoryForm from "../components/form/CategoryForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
+import { getSortOrder } from "../utils";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
@@ -89,7 +90,8 @@ const Category = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "createdAt"),
     },
     {
       title: (
@@ -103,8 +105,8 @@ const Category = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      defaultSortOrder: "descend",
-      sorter: (a, b) => new Date(a.updatedAt) - new Date(b.updatedAt),
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "updatedAt"),
     },
     {
       title: (

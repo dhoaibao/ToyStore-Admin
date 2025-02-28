@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="flex flex-row min-h-screen">
+    <div className="flex flex-row container w-full min-h-screen">
       <div className="w-1/5">
         <Sidebar />
       </div>

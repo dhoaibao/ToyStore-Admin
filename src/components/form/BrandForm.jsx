@@ -58,6 +58,8 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
       onOk={() => form.submit()}
       confirmLoading={loading}
       centered
+      okText="Lưu"
+      cancelText="Hủy"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item
@@ -72,7 +74,7 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
           name="brandDesc"
           rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
         >
-          <Input.TextArea />
+          <Input.TextArea autoSize={{ minRows: 5, maxRows: 5 }} />
         </Form.Item>
       </Form>
     </Modal>

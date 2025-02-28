@@ -5,14 +5,13 @@ import {
   Form,
   Input,
   Upload,
-  Button,
   message,
   Select,
   InputNumber,
   DatePicker,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import fetchImage from "../../utils/fetchImage";
+import { fetchImage } from "../../utils";
 import { promotionService } from "../../services";
 import dayjs from "dayjs";
 
@@ -116,6 +115,8 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
       onOk={() => form.submit()}
       confirmLoading={loading}
       centered
+      okText="Lưu"
+      cancelText="Hủy"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item
@@ -125,73 +126,75 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
         >
           <Input />
         </Form.Item>
-
-        <Form.Item
-          label="Hình ảnh:"
-          name="promotionThumbnail"
-          rules={[
-            {
-              required: fileList.length === 0,
-              message: "Vui lòng chọn hình ảnh",
-            },
-          ]}
-        >
-          <Upload
-            fileList={fileList}
-            listType="picture"
-            maxCount={1}
-            accept="image/*"
-            beforeUpload={() => false}
-            onChange={handleUploadChange}
-            onRemove={handleRemove}
-          >
-            {fileList.length === 0 && (
-              <Button icon={<UploadOutlined />}>Tải lên</Button>
-            )}
-          </Upload>
-        </Form.Item>
         <div className="flex flex-row space-x-2">
           <Form.Item
             className="w-1/2"
-            label="Loại khuyến mãi:"
-            name="discountType"
+            label="Hình ảnh:"
+            name="promotionThumbnail"
             rules={[
-              { required: true, message: "Vui lòng chọn loại khuyến mãi" },
+              {
+                required: fileList.length === 0,
+                message: "Vui lòng chọn hình ảnh",
+              },
             ]}
           >
-            <Select
-              onChange={(value) => setDiscountType(value)}
-              options={[
-                { value: "fixed_amount", label: "Giảm giá cố định" },
-                { value: "percentage", label: "Giảm theo phần trăm" },
+            <Upload
+              fileList={fileList}
+              listType="picture-card"
+              maxCount={1}
+              accept="image/*"
+              beforeUpload={() => false}
+              onChange={handleUploadChange}
+              onRemove={handleRemove}
+            >
+              {fileList.length < 1 && (
+                <div className="flex-col">
+                  <UploadOutlined /> <p>Tải lên</p>
+                </div>
+              )}
+            </Upload>
+          </Form.Item>
+          <div>
+            <Form.Item
+              label="Loại khuyến mãi:"
+              name="discountType"
+              rules={[
+                { required: true, message: "Vui lòng chọn loại khuyến mãi" },
               ]}
-            ></Select>
-          </Form.Item>
-          <Form.Item
-            className="w-1/2"
-            label="Giá trị:"
-            name="discountValue"
-            rules={[
-              { required: true, message: "Vui lòng nhập giá trị khuyến mãi" },
-            ]}
-          >
-            <InputNumber
-              addonAfter={discountType === "percentage" ? "%" : "đ"}
-              min={1}
-              max={discountType === "percentage" ? 100 : 1000000000}
-              step={discountType === "percentage" ? 1 : 1000}
-              formatter={(value) =>
-                discountType === "fixed_amount"
-                  ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  : value
-              }
-              parser={(value) =>
-                discountType === "fixed_amount"
-                  ? value.replace(/,/g, "")
-                  : value
-              }
-            />
-          </Form.Item>
+            >
+              <Select
+                onChange={(value) => setDiscountType(value)}
+                options={[
+                  { value: "fixed_amount", label: "Giảm giá cố định" },
+                  { value: "percentage", label: "Giảm theo phần trăm" },
+                ]}
+              ></Select>
+            </Form.Item>
+            <Form.Item
+              label="Giá trị:"
+              name="discountValue"
+              rules={[
+                { required: true, message: "Vui lòng nhập giá trị khuyến mãi" },
+              ]}
+            >
+              <InputNumber
+                addonAfter={discountType === "percentage" ? "%" : "VNĐ"}
+                min={1}
+                max={discountType === "percentage" ? 100 : 1000000000}
+                step={discountType === "percentage" ? 1 : 1000}
+                formatter={(value) =>
+                  discountType === "fixed_amount"
+                    ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    : value
+                }
+                parser={(value) =>
+                  discountType === "fixed_amount"
+                    ? value.replace(/,/g, "")
+                    : value
+                }
+              />
+            </Form.Item>
+          </div>
         </div>
         <Form.Item
           label="Mô tả:"

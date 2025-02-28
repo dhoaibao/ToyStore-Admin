@@ -15,7 +15,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
-import generateAvatar from "../../utils/generateAvatar";
+import { generateAvatar } from "../../utils";
 import dayjs from "dayjs";
 import { updateProfile } from "../../redux/thunks/userThunk";
 
@@ -55,10 +55,8 @@ const Profile = ({ open, setOpen }) => {
       message.success("Cập nhật thông tin thành công!");
       setIsEditing(false);
     } catch (error) {
-      console.error("Update profile error:", error.response?.data);
-      message.error(
-        error.response?.data?.message || "Cập nhật thông tin thất bại!"
-      );
+      console.error("Update profile error:", error?.data);
+      message.error(error?.data?.message || "Cập nhật thông tin thất bại!");
     } finally {
       setLoading(false);
       onClose();

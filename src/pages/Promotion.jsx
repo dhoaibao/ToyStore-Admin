@@ -6,6 +6,7 @@ import { Pencil } from "lucide-react";
 import PromotionForm from "../components/form/PromotionForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
+import { getSortOrder } from "../utils";
 
 const Promotion = () => {
   const [promotions, setPromotions] = useState([]);
@@ -97,6 +98,7 @@ const Promotion = () => {
         { text: "Phần trăm", value: "percentage" },
         { text: "Cố định", value: "fixed_amount" },
       ],
+      filteredValue: [searchParams.get("discountType")],
       filterMultiple: false,
     },
     {
@@ -126,7 +128,8 @@ const Promotion = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "startDate"),
     },
     {
       title: (
@@ -140,7 +143,8 @@ const Promotion = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => new Date(a.endDate) - new Date(b.endDate),
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "endDate"),
     },
     {
       title: (

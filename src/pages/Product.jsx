@@ -6,6 +6,7 @@ import { Pencil } from "lucide-react";
 import ProductForm from "../components/form/ProductForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
+import { getSortOrder } from "../utils";
 
 const Product = () => {
   const [products, setProducts] = useState([]);
@@ -62,7 +63,7 @@ const Product = () => {
       render: (productImages) => (
         <div className="flex justify-center">
           <img
-            src={productImages[0].uploadImage.url}
+            src={productImages[0].url}
             alt="category"
             className="w-8 h-8 object-cover rounded-md"
           />
@@ -91,7 +92,8 @@ const Product = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => a.price - b.price,
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "price"),
     },
     {
       title: (
@@ -109,7 +111,8 @@ const Product = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => a.price - b.price,
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "quantity"),
     },
     {
       title: (
@@ -117,10 +120,10 @@ const Product = () => {
           <span>Trạng thái</span>
         </div>
       ),
-      dataIndex: "visible",
+      dataIndex: "isActive",
       align: "center",
-      render: (visible) => {
-        return visible ? (
+      render: (isActive) => {
+        return isActive ? (
           <Tag color="blue">ACTIVE</Tag>
         ) : (
           <Tag color="gray">INACTIVE</Tag>
@@ -136,6 +139,7 @@ const Product = () => {
           value: false,
         },
       ],
+      filteredValue: [searchParams.get("isActive")],
       filterMultiple: false,
     },
     {
@@ -150,7 +154,8 @@ const Product = () => {
       showSorterTooltip: {
         target: "sorter-icon",
       },
-      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "createdAt"),
     },
     {
       title: (

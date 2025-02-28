@@ -1,4 +1,6 @@
 import CryptoJS from 'crypto-js';
+import moment from 'moment';
+import { ICON_MAP, ORDER_STATUS } from "../constants";
 
 export const generateAvatar = (identifier, name) => {
     const hash = CryptoJS.MD5(identifier || "default").toString();
@@ -37,3 +39,42 @@ export const getSortOrder = (searchParams, columnKey) => {
     }
     return null;
 }
+
+export const getStepStatus = (statusName) => {
+    return statusName === "canceled"
+        ? "error"
+        : statusName === "delivered"
+            ? "finish"
+            : "process";
+};
+
+export const generateStepItems = (orderTrackings) => {
+    const hasCanceled = orderTrackings.some(
+        (track) => track.orderStatus.statusName === "canceled"
+    );
+
+    let statuses = [
+        "pending",
+        "confirmed",
+        "shipping",
+        "delivered",
+    ];
+
+    if (hasCanceled) {
+        statuses = statuses.map((status) => status === "pending" ? "canceled" : status);
+    }
+
+    return statuses.map((key) => {
+        const status = ORDER_STATUS[key];
+        const tracking = orderTrackings.find(
+            (track) => track.orderStatus.statusName === key
+        );
+        return {
+            title: status.label,
+            icon: ICON_MAP[key],
+            description: tracking
+                ? moment(tracking.time).format("DD/MM/YYYY HH:mm")
+                : null,
+        };
+    });
+};

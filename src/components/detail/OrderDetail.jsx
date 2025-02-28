@@ -1,17 +1,51 @@
 import PropTypes from "prop-types";
-import { Modal, Descriptions, Tag, Avatar } from "antd";
+import { Modal, Avatar, Steps } from "antd";
 import moment from "moment";
-import { PAYMENT_METHOD, ORDER_STATUS } from "../../constants";
+import { PAYMENT_METHOD } from "../../constants";
+import { generateStepItems, getStepStatus } from "../../utils";
+import { useMemo } from "react";
 
 const OrderDetail = ({ open, setOpen, data }) => {
-  console.log(PAYMENT_METHOD);
-  const items = [
-    {
-      key: "1",
-      label: <p className="font-semibold text-primary">Địa chỉ nhận hàng:</p>,
-      span: "filled",
-      children: (
-        <div>
+  const { stepItems, currentStep, stepStatus } = useMemo(() => {
+    const trackings = data?.orderTrackings || [];
+    const lastTracking = trackings[trackings.length - 1];
+    return {
+      stepItems: generateStepItems(trackings).map((item) => ({
+        ...item,
+        description: item.description ? (
+          <span className="text-xs">{item.description}</span>
+        ) : null,
+      })),
+      currentStep:
+        lastTracking?.orderStatus.orderStatusId === 5
+          ? 0
+          : lastTracking?.orderStatus.orderStatusId - 1 || 0,
+      stepStatus: getStepStatus(lastTracking?.orderStatus.statusName),
+    };
+  }, [data?.orderTrackings]);
+
+  return (
+    <Modal
+      onCancel={() => setOpen(false)}
+      title={`Đơn hàng: #${data?.orderId}`}
+      footer={null}
+      open={open}
+      centered
+      width={900}
+      className="overflow-y-auto max-h-screen"
+    >
+      <Steps
+        className="p-4 pb-6"
+        status={stepStatus}
+        size="small"
+        current={currentStep}
+        items={stepItems}
+      ></Steps>
+      <div className="flex justify-between space-x-2">
+        <div className="bg-gray-100 p-4 mb-2 rounded-md w-1/2">
+          <p className="font-semibold text-base text-primary mb-2">
+            Địa chỉ nhận hàng:{" "}
+          </p>
           {[
             { label: "Người nhận", value: data?.orderAddress.contactName },
             { label: "Số điện thoại", value: data?.orderAddress.contactPhone },
@@ -23,66 +57,61 @@ const OrderDetail = ({ open, setOpen, data }) => {
             </div>
           ))}
         </div>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <p className="font-semibold text-primary">Thông tin thanh toán:</p>
-      ),
-      span: "filled",
-      children: (
-        <div>
-          {[
-            {
-              label: "Thời gian đặt hàng",
-              value: moment(data?.createdAt).format("DD/MM/YYYY HH:mm"),
-            },
-            {
-              label: "Phương thức thanh toán",
-              value:
-                PAYMENT_METHOD[data?.paymentMethod.paymentMethodName]?.label,
-            },
-            {
-              label: "Trạng thái thanh toán",
-              value: `${
-                data?.paymentStatus ? "Đã thanh toán" : "Chờ thanh toán"
-              }`,
-            },
-            {
-              label: "Tiền hàng",
-              value: `${data?.totalPrice.toLocaleString("vi-VN")}đ`,
-            },
-            {
-              label: "Giảm",
-              value: `-${data?.totalDiscount.toLocaleString("vi-VN")}đ`,
-            },
-            {
-              label: "Phí vận chuyển",
-              value: `${data?.shippingFee.toLocaleString("vi-VN")}đ`,
-            },
-            {
-              label: "Tổng",
-              value: `${data?.finalPrice.toLocaleString("vi-VN")}đ`,
-              className: "text-red-600 font-semibold",
-            },
-          ].map((item, index) => (
-            <div key={index} className="flex space-x-1">
-              <p className="font-semibold">{item.label}:</p>
-              <p className={item.className || ""}>{item.value}</p>
-            </div>
-          ))}
+
+        <div className="bg-gray-100 p-4 mb-2 rounded-md w-1/2">
+          <p className="font-semibold text-base text-primary mb-2">
+            Thông tin thanh toán:{" "}
+          </p>
+          <div>
+            {[
+              {
+                label: "Thời gian đặt hàng",
+                value: moment(data?.createdAt).format("DD/MM/YYYY HH:mm"),
+              },
+              {
+                label: "Phương thức thanh toán",
+                value:
+                  PAYMENT_METHOD[data?.paymentMethod.paymentMethodName]?.label,
+              },
+              {
+                label: "Trạng thái thanh toán",
+                value: `${
+                  data?.paymentStatus ? "Đã thanh toán" : "Chờ thanh toán"
+                }`,
+              },
+              {
+                label: "Tiền hàng",
+                value: `${data?.totalPrice.toLocaleString("vi-VN")}đ`,
+              },
+              {
+                label: "Giảm",
+                value: `-${data?.totalDiscount.toLocaleString("vi-VN")}đ`,
+              },
+              {
+                label: "Phí vận chuyển",
+                value: `${data?.shippingFee.toLocaleString("vi-VN")}đ`,
+              },
+              {
+                label: "Tổng",
+                value: `${data?.finalPrice.toLocaleString("vi-VN")}đ`,
+                className: "text-red-600 font-semibold",
+              },
+            ].map((item, index) => (
+              <div key={index} className="flex space-x-1">
+                <p className="font-semibold">{item.label}:</p>
+                <p className={item.className || ""}>{item.value}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      ),
-    },
-    {
-      key: "3",
-      label: <p className="font-semibold text-primary">Sản phẩm đã đặt:</p>,
-      span: "filled",
-      children: (
+      </div>
+      <div className="bg-gray-100 p-4 mb-2 rounded-md">
+        <p className="font-semibold text-base text-primary mb-2">
+          Sản phẩm đã đặt:{" "}
+        </p>
         <div>
           {data?.orderDetails.map((item, index) => (
-            <div key={index} className="py-2">
+            <div key={index} className="py-1">
               <div className="flex space-x-2">
                 <Avatar
                   src={item.product.productImages[0].url}
@@ -91,7 +120,9 @@ const OrderDetail = ({ open, setOpen, data }) => {
                   className="border border-gray-300"
                 />
                 <div>
-                  <p className="font-semibold">{item.product.productName}</p>
+                  <p className="font-semibold line-clamp-1">
+                    {item.product.productName}
+                  </p>
                   <p>{`Số lượng: ${item.quantity}`}</p>
                   <p>{`Giá: ${
                     item.discountedPrice !== 0
@@ -103,23 +134,7 @@ const OrderDetail = ({ open, setOpen, data }) => {
             </div>
           ))}
         </div>
-      ),
-    },
-  ];
-
-  return (
-    <Modal
-      onCancel={() => setOpen(false)}
-      footer={null}
-      open={open}
-      centered
-      width={800}
-    >
-      <Descriptions
-        bordered
-        title={`Đơn hàng: #${data?.orderId}`}
-        items={items}
-      />
+      </div>
     </Modal>
   );
 };

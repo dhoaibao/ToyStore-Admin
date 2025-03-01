@@ -84,7 +84,7 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
     }
 
     if (fileList.length > 0 && fileList[0].originFileObj) {
-      if (data.promotionThumbnail?.url) {
+      if (data?.promotionThumbnail?.url) {
         if (fileList[0].url !== data.promotionThumbnail?.url) {
           formData.append("file", fileList[0].originFileObj);
         }

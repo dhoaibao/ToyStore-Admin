@@ -79,7 +79,7 @@ const UserForm = ({ open, setOpen, data, setFetchData }) => {
     }
 
     if (fileList.length > 0 && fileList[0].originFileObj) {
-      if (data.avatar?.url) {
+      if (data?.avatar?.url) {
         if (fileList[0].url !== data.avatar?.url) {
           formData.append("avatar", fileList[0].originFileObj);
         }
@@ -87,8 +87,6 @@ const UserForm = ({ open, setOpen, data, setFetchData }) => {
         formData.append("avatar", fileList[0].originFileObj);
       }
     }
-
-    console.log("formData", data.avatar?.url, fileList[0].url);
 
     try {
       if (data?.userId) {

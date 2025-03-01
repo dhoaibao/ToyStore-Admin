@@ -71,7 +71,7 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
       formData.append(key, values[key]);
     }
     if (fileList.length > 0 && fileList[0].originFileObj) {
-      if (data.categoryThumbnail?.url) {
+      if (data?.categoryThumbnail?.url) {
         if (fileList[0].url !== data.categoryThumbnail?.url) {
           formData.append("file", fileList[0].originFileObj);
         }

@@ -39,8 +39,9 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
         message.success("Thêm thông tin sản phẩm thành công!");
       }
       setFetchData(true);
+      onClose();
     } catch (error) {
-      if (error === "Product information already exists!") {
+      if (error.message === "Product information already exists!") {
         message.error("Thông tin sản phẩm đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
@@ -48,7 +49,6 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
       console.error(error);
     }
     setLoading(false);
-    onClose();
   };
 
   return (

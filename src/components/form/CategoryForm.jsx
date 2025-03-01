@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { Modal, Form, Input, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import {fetchImage} from "../../utils";
+import { fetchImage } from "../../utils";
 import { categoryService } from "../../services";
 
 const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
@@ -71,7 +71,13 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
       formData.append(key, values[key]);
     }
     if (fileList.length > 0 && fileList[0].originFileObj) {
-      formData.append("file", fileList[0].originFileObj);
+      if (data.categoryThumbnail?.url) {
+        if (fileList[0].url !== data.categoryThumbnail?.url) {
+          formData.append("file", fileList[0].originFileObj);
+        }
+      } else {
+        formData.append("file", fileList[0].originFileObj);
+      }
     }
 
     try {
@@ -83,6 +89,7 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
         message.success("Thêm danh mục thành công!");
       }
       setFetchData(true);
+      onClose();
     } catch (error) {
       if (error.message === "Category already exists!") {
         message.error("Danh mục đã tồn tại!");
@@ -92,7 +99,6 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
       console.error(error);
     }
     setLoading(false);
-    onClose();
   };
 
   return (

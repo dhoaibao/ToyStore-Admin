@@ -83,8 +83,14 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
       formData.append(key, values[key]);
     }
 
-    if (fileList.length > 0 && fileList[0]?.originFileObj) {
-      formData.append("file", fileList[0].originFileObj);
+    if (fileList.length > 0 && fileList[0].originFileObj) {
+      if (data.promotionThumbnail?.url) {
+        if (fileList[0].url !== data.promotionThumbnail?.url) {
+          formData.append("file", fileList[0].originFileObj);
+        }
+      } else {
+        formData.append("file", fileList[0].originFileObj);
+      }
     }
 
     try {
@@ -96,12 +102,12 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
         message.success("Thêm khuyến mãi thành công!");
       }
       setFetchData(true);
+      onClose();
     } catch (error) {
       message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
       console.error(error);
     }
     setLoading(false);
-    onClose();
   };
 
   return (

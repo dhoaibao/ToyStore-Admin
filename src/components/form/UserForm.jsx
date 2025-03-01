@@ -77,11 +77,18 @@ const UserForm = ({ open, setOpen, data, setFetchData }) => {
     for (const key in values) {
       formData.append(key, values[key]);
     }
+
     if (fileList.length > 0 && fileList[0].originFileObj) {
-      formData.append("avatar", fileList[0].originFileObj);
+      if (data.avatar?.url) {
+        if (fileList[0].url !== data.avatar?.url) {
+          formData.append("avatar", fileList[0].originFileObj);
+        }
+      } else {
+        formData.append("avatar", fileList[0].originFileObj);
+      }
     }
 
-    console.log("formData", formData);
+    console.log("formData", data.avatar?.url, fileList[0].url);
 
     try {
       if (data?.userId) {
@@ -92,16 +99,16 @@ const UserForm = ({ open, setOpen, data, setFetchData }) => {
         message.success("Thêm người dùng thành công!");
       }
       setFetchData(true);
+      onClose();
     } catch (error) {
-      if (error.message === "User already exists!") {
-        message.error("Người dùng đã tồn tại!");
+      if (error.message === "Email already exists!") {
+        message.error("Email đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
       }
       console.error(error);
     }
     setLoading(false);
-    onClose();
   };
 
   return (

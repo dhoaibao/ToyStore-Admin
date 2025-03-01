@@ -47,8 +47,9 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
         message.success("Thêm mã giảm giá thành công!");
       }
       setFetchData(true);
+      onClose();
     } catch (error) {
-      if (error.data.message === "Voucher code already exists!") {
+      if (error.message === "Voucher code already exists!") {
         message.error("Mã giảm giá đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
@@ -56,7 +57,6 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
       console.error(error);
     }
     setLoading(false);
-    onClose();
   };
 
   return (

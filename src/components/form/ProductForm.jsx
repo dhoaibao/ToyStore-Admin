@@ -56,19 +56,24 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
           const files = await Promise.all(
             data.productImages.map(async (image, index) => {
               if (image.url) {
-                return await fetchImage(image.url, `product-image-${index}`);
+                const result = await fetchImage(
+                  image.url,
+                  `product-image-${index}`
+                );
+                return { file: result, uploadImageId: image.uploadImageId };
               }
               return null;
             })
           );
+
           const fileList = files
             .filter((file) => file)
-            .map((file) => ({
-              uid: file.name,
-              name: file.name,
+            .map((item) => ({
+              uid: item.file.name,
+              name: item.file.name,
               status: "done",
-              url: URL.createObjectURL(file),
-              originFileObj: file,
+              uploadImageId: item.uploadImageId,
+              originFileObj: item.file,
             }));
           setFileList(fileList);
         } else {
@@ -121,13 +126,20 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
     // Append productInfos to formData
     formData.append("productInfos", JSON.stringify(productInfos));
 
-    if (fileList.length > 0) {
-      fileList.forEach((file) => {
-        formData.append("images", file.originFileObj);
+    const existingFiles = fileList.filter((file) => file.uploadImageId);
+    const newFiles = fileList.filter((file) => !file.uploadImageId);
+
+    if (newFiles.length > 0) {
+      newFiles.forEach((file) => {
+        formData.append("newImages", file.originFileObj);
       });
     }
 
-    console.log("formData", formData);
+    if (existingFiles.length > 0) {
+      existingFiles.forEach((file) => {
+        formData.append("existingImages", file.uploadImageId);
+      });
+    }
 
     try {
       if (data?.productId) {
@@ -138,8 +150,9 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
         message.success("Thêm sản phẩm thành công!");
       }
       setFetchData(true);
+      onClose();
     } catch (error) {
-      if (error === "Product already exists!") {
+      if (error.message === "Product already exists!") {
         message.error("Sản phẩm đã tồn tại!");
       } else {
         message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
@@ -147,7 +160,6 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
       console.error(error);
     }
     setLoading(false);
-    onClose();
   };
 
   return (

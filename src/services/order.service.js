@@ -25,6 +25,11 @@ class OrderService {
         return await response.json();
     }
 
+    async updateOrderStatus(id, data) {
+        const response = await this.api.put(`/${id}`, data);
+        return await response.json();
+    }
+
     async cancelOrder(id) {
         const response = await this.api.put(`/cancel/${id}`);
         return await response.json();

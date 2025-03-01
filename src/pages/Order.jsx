@@ -2,9 +2,10 @@ import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { orderService } from "../services";
 import moment from "moment";
-import { Eye } from "lucide-react";
+import { Eye, Pencil } from "lucide-react";
 import OrderForm from "../components/form/OrderForm";
 import OrderDetail from "../components/detail/OrderDetail";
+import OrderStatus from "../components/detail/OrderStatus";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { ORDER_STATUS } from "../constants";
@@ -15,6 +16,7 @@ const Order = () => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
+  const [openOrderStatus, setOpenOrderStatus] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [fetchData, setFetchData] = useState(true);
   const [pagination, setPagination] = useState({
@@ -169,15 +171,26 @@ const Order = () => {
       align: "center",
       render: (_, record) => {
         return (
-          <Button
-            type="text"
-            onClick={() => {
-              setSelectedOrder(record);
-              setOpenDetail(true);
-            }}
-          >
-            <Eye strokeWidth={1} size={20} color="blue" />
-          </Button>
+          <>
+            <Button
+              type="text"
+              onClick={() => {
+                setSelectedOrder(record);
+                setOpenOrderStatus(true);
+              }}
+            >
+              <Pencil strokeWidth={1} size={20} color="blue" />
+            </Button>
+            <Button
+              type="text"
+              onClick={() => {
+                setSelectedOrder(record);
+                setOpenDetail(true);
+              }}
+            >
+              <Eye strokeWidth={1} size={20} color="blue" />
+            </Button>
+          </>
         );
       },
     },
@@ -208,6 +221,12 @@ const Order = () => {
         open={openDetail}
         setOpen={setOpenDetail}
         data={selectedOrder}
+      />
+      <OrderStatus
+        open={openOrderStatus}
+        setOpen={setOpenOrderStatus}
+        data={selectedOrder}
+        setFetchData={setFetchData}
       />
     </>
   );

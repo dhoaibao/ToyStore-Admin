@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { brandService } from "../services";
 import moment from "moment";
@@ -59,6 +59,34 @@ const Brand = () => {
         </div>
       ),
       dataIndex: "brandName",
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Trạng thái</span>
+        </div>
+      ),
+      dataIndex: "isActive",
+      align: "center",
+      render: (isActive) => {
+        return isActive ? (
+          <Tag color="blue">ACTIVE</Tag>
+        ) : (
+          <Tag color="gray">INACTIVE</Tag>
+        );
+      },
+      filters: [
+        {
+          text: "ACTIVE",
+          value: true,
+        },
+        {
+          text: "INACTIVE",
+          value: false,
+        },
+      ],
+      filteredValue: [searchParams.get("isActive")],
+      filterMultiple: false,
     },
     {
       title: (

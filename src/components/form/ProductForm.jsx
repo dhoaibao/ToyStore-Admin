@@ -9,8 +9,11 @@ import {
   InputNumber,
   Select,
   Switch,
-  AutoComplete,
+  Button,
 } from "antd";
+import { History, FilePenLine } from "lucide-react";
+import PriceHistory from "../others/PriceHistory";
+import PriceForm from "./PriceForm";
 import { UploadOutlined } from "@ant-design/icons";
 import { fetchImage } from "../../utils";
 import {
@@ -19,6 +22,7 @@ import {
   categoryService,
   productInformationService,
 } from "../../services";
+import DynamicComponent from "../common/DynamicComponent";
 
 const ProductForm = ({ open, setOpen, data, setFetchData }) => {
   const [form] = Form.useForm();
@@ -28,6 +32,14 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [productsInformation, setProductsInformation] = useState([]);
+  const [openPriceHistory, setOpenPriceHistory] = useState(false);
+  const [openPriceForm, setOpenPriceForm] = useState(false);
+  const [newPrice, setNewPrice] = useState(null);
+  const [startValidPrice, setStartValidPrice] = useState(null);
+
+  useEffect(() => {
+    form.setFieldsValue({ price: newPrice });
+  }, [newPrice, form]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,6 +63,11 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
           }, {}),
         };
         form.setFieldsValue(initialValues);
+        setNewPrice(data.price);
+        const startDate = data.prices.find(
+          (item) => item.price === data.price
+        )?.startDate;
+        setStartValidPrice(startDate);
 
         if (data.productImages?.length > 0) {
           const files = await Promise.all(
@@ -99,10 +116,19 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
     );
   };
 
+  const formattedOptions = (options) => {
+    return options.map((option) => ({
+      value: option,
+      label: option,
+    }));
+  };
+
   const onClose = () => {
     setOpen(false);
     form.resetFields();
     setFileList([]);
+    setNewPrice(null);
+    setStartValidPrice(null);
   };
 
   const onFinish = async (values) => {
@@ -115,6 +141,8 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
         formData.append(key, values[key]);
       }
     }
+
+    formData.append("startValidPrice", startValidPrice);
 
     // Transform productInfoValues into the desired format
     const productInfos = productsInformation.map((productInformation) => ({
@@ -174,7 +202,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
       confirmLoading={loading}
       centered
       width={900}
-      className="overflow-auto max-h-screen"
+      className="max-h-[95vh] overflow-y-auto scrollbar-hide"
       okText="Lưu"
       cancelText="Hủy"
     >
@@ -188,7 +216,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 { required: true, message: "Vui lòng nhập tên sản phẩm" },
               ]}
             >
-              <Input />
+              <Input placeholder="Nhập tên sản phẩm" />
             </Form.Item>
 
             <Form.Item
@@ -224,11 +252,14 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 { required: true, message: "Vui lòng nhập mô tả sản phẩm" },
               ]}
             >
-              <Input.TextArea autoSize={{ minRows: 10, maxRows: 10 }} />
+              <Input.TextArea
+                placeholder="Nhập mô tả"
+                autoSize={{ minRows: 10, maxRows: 10 }}
+              />
             </Form.Item>
           </div>
           <div className="w-1/2">
-            <div className="flex flex-row space-x-2">
+            <div className="flex flex-row items-center space-x-2">
               <Form.Item
                 className="w-1/2"
                 label="Giá:"
@@ -241,6 +272,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 ]}
               >
                 <InputNumber
+                  placeholder="Nhập giá"
                   addonAfter={"VNĐ"}
                   min={1}
                   formatter={(value) =>
@@ -249,19 +281,19 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                   parser={(value) => value.replace(/,/g, "")}
                 />
               </Form.Item>
-              <Form.Item
-                className="w-1/2"
-                label="Số lượng:"
-                name="quantity"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập số lượng sản phẩm",
-                  },
-                ]}
-              >
-                <InputNumber className="w-full" min={1} />
-              </Form.Item>
+              {data && (
+                <Form.Item
+                  label="Lịch sử giá:"
+                  className="w-1/2 items-center flex"
+                >
+                  {/* <Button type="text" onClick={() => setOpenPriceForm(true)}>
+                    <FilePenLine strokeWidth={1} />
+                  </Button> */}
+                  <Button type="text" onClick={() => setOpenPriceHistory(true)}>
+                    <History strokeWidth={1} />
+                  </Button>
+                </Form.Item>
+              )}
             </div>
             <div className="flex flex-row space-x-2">
               <Form.Item
@@ -273,6 +305,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 ]}
               >
                 <Select
+                  placeholder="Chọn thương hiệu"
                   options={brands.map((brand) => ({
                     value: brand.brandId,
                     label: brand.brandName,
@@ -286,6 +319,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 rules={[{ required: true, message: "Vui lòng chọn danh mục" }]}
               >
                 <Select
+                  placeholder="Chọn danh mục"
                   options={categories.map((category) => ({
                     value: category.categoryId,
                     label: category.categoryName,
@@ -293,20 +327,41 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 ></Select>
               </Form.Item>
             </div>
-            <Form.Item
-              label="Trạng thái:"
-              name="isActive"
-              valuePropName="checked"
-              initialValue={true}
-              rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
-            >
-              <Switch
-                checkedChildren="ACTIVE"
-                unCheckedChildren="INACTIVE"
-                defaultChecked
-              />
-            </Form.Item>
-
+            <div className="flex flex-row space-x-2">
+              <Form.Item
+                className="w-1/2"
+                label="Số lượng:"
+                name="quantity"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập số lượng sản phẩm",
+                  },
+                ]}
+              >
+                <InputNumber
+                  placeholder="Nhập số lượng"
+                  className="w-full"
+                  min={1}
+                />
+              </Form.Item>
+              <Form.Item
+                className="w-1/2"
+                label="Trạng thái:"
+                name="isActive"
+                valuePropName="checked"
+                initialValue={true}
+                rules={[
+                  { required: true, message: "Vui lòng chọn trạng thái" },
+                ]}
+              >
+                <Switch
+                  checkedChildren="ACTIVE"
+                  unCheckedChildren="INACTIVE"
+                  defaultChecked
+                />
+              </Form.Item>
+            </div>
             <div className="flex flex-wrap">
               {productsInformation.map((productInformation) => (
                 <Form.Item
@@ -317,21 +372,15 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                   rules={[
                     {
                       required: true,
-                      message: `Vui lòng nhập ${productInformation.productInfoName}`,
+                      message: `Vui lòng nhập ${productInformation.productInfoName.toLowerCase()}`,
                     },
                   ]}
                 >
-                  <AutoComplete
-                    options={Array.from(
-                      new Set(
-                        productInformation.productInfoDetails.map(
-                          (item) => item.value
-                        )
-                      )
-                    ).map((value) => ({
-                      value: value,
-                      label: value,
-                    }))}
+                  <DynamicComponent
+                    className="w-full"
+                    type={productInformation.type}
+                    options={formattedOptions(productInformation.options)}
+                    placeholder={`Nhập ${productInformation.productInfoName.toLowerCase()}`}
                   />
                 </Form.Item>
               ))}
@@ -339,6 +388,18 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
           </div>
         </div>
       </Form>
+      <PriceHistory
+        open={openPriceHistory}
+        setOpen={setOpenPriceHistory}
+        data={data?.prices}
+      />
+      <PriceForm
+        open={openPriceForm}
+        data={{ price: newPrice, startDate: startValidPrice }}
+        setOpen={setOpenPriceForm}
+        setNewPrice={setNewPrice}
+        setStartValidPrice={setStartValidPrice}
+      />
     </Modal>
   );
 };

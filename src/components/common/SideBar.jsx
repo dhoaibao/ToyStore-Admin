@@ -63,9 +63,14 @@ const Sidebar = () => {
       icon: <User strokeWidth={1} />,
     },
     {
-      to: "/permissions",
       title: "Phân quyền",
       icon: <KeyRound strokeWidth={1} />,
+      children: (
+        <div className="space-y-2">
+          <NavItem to="/roles" title="Vai trò" />
+          <NavItem to="/permission" title="Quyền hạn" />
+        </div>
+      ),
     },
     {
       to: "/system-config",

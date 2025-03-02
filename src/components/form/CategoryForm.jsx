@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Upload, message } from "antd";
+import { Modal, Form, Input, Upload, message, Switch } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { fetchImage } from "../../utils";
 import { categoryService } from "../../services";
@@ -149,6 +149,19 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
               </div>
             )}
           </Upload>
+        </Form.Item>
+        <Form.Item
+          label="Trạng thái:"
+          name="isActive"
+          valuePropName="checked"
+          initialValue={true}
+          rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
+        >
+          <Switch
+            checkedChildren="ACTIVE"
+            unCheckedChildren="INACTIVE"
+            defaultChecked
+          />
         </Form.Item>
       </Form>
     </Modal>

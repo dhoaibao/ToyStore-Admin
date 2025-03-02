@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { userService } from "../services";
 import { Pencil, Eye } from "lucide-react";
 import UserForm from "../components/form/UserForm";
-import UserDetail from "../components/detail/UserDetail";
+import UserDetail from "../components/others/UserDetail";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { generateAvatar, getSortOrder } from "../utils";

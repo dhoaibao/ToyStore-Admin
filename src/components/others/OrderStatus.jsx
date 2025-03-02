@@ -103,7 +103,7 @@ const OrderStatus = ({ open, setOpen, data, setFetchData }) => {
       open={open}
       centered
       width={700}
-      className="overflow-y-auto max-h-screen"
+      className="max-h-[95vh] overflow-y-auto scrollbar-hide"
     >
       <Steps
         onChange={handleChangeStep}

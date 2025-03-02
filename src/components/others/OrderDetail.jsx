@@ -32,7 +32,7 @@ const OrderDetail = ({ open, setOpen, data }) => {
       open={open}
       centered
       width={900}
-      className="overflow-y-auto max-h-screen"
+      className="max-h-[95vh] overflow-y-auto scrollbar-hide"
     >
       <Steps
         className="p-4 pb-6"

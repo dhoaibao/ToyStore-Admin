@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { productInformationService } from "../services";
 import moment from "moment";
@@ -60,6 +60,63 @@ const ProductInfo = () => {
         </div>
       ),
       dataIndex: "productInfoName",
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Loại</span>
+        </div>
+      ),
+      dataIndex: "type",
+      align: "center",
+      render: (type) => {
+        let color;
+        switch (type) {
+          case "INPUT_NUMBER":
+            color = "blue";
+            break;
+          case "INPUT":
+            color = "green";
+            break;
+          case "SELECT":
+            color = "orange";
+            break;
+          case "AUTOCOMPLETE":
+            color = "purple";
+            break;
+          default:
+            color = "gray";
+        }
+        return <Tag color={color}>{type}</Tag>;
+      },
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Trạng thái</span>
+        </div>
+      ),
+      dataIndex: "isActive",
+      align: "center",
+      render: (isActive) => {
+        return isActive ? (
+          <Tag color="blue">ACTIVE</Tag>
+        ) : (
+          <Tag color="gray">INACTIVE</Tag>
+        );
+      },
+      filters: [
+        {
+          text: "ACTIVE",
+          value: true,
+        },
+        {
+          text: "INACTIVE",
+          value: false,
+        },
+      ],
+      filteredValue: [searchParams.get("isActive")],
+      filterMultiple: false,
     },
     {
       title: (

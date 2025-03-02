@@ -1,18 +1,19 @@
 import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
-import { categoryService } from "../services";
+import { permissionService } from "../services";
 import moment from "moment";
 import { Pencil } from "lucide-react";
-import CategoryForm from "../components/form/CategoryForm";
+import PermissionForm from "../components/form/PermissionForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { getSortOrder } from "../utils";
+import { render } from "react-dom";
 
-const Category = () => {
-  const [categories, setCategories] = useState([]);
+const Permission = () => {
+  const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedPermission, setSelectedPermission] = useState(null);
   const [fetchData, setFetchData] = useState(true);
   const [pagination, setPagination] = useState({
     totalPages: 0,
@@ -27,14 +28,14 @@ const Category = () => {
   );
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchPermissions = async () => {
       setLoading(true);
       try {
-        const response = await categoryService.getAllCategories(
+        const response = await permissionService.getAllPermissions(
           searchParams.toString()
         );
-        setCategories(
-          response.data.map((item) => ({ ...item, key: item.categoryId }))
+        setPermissions(
+          response.data.map((item) => ({ ...item, key: item.permissionId }))
         );
         setPagination({
           totalPages: response.pagination.totalPages,
@@ -44,55 +45,45 @@ const Category = () => {
         setLoading(false);
         setFetchData(false);
       } catch (error) {
-        console.error("Failed to fetch category list: ", error.data);
+        console.error("Failed to fetch permission list: ", error.data);
         setLoading(false);
       }
     };
-    if (fetchData || searchParams) fetchCategories();
+    if (fetchData || searchParams) fetchPermissions();
   }, [fetchData, searchParams]);
+
+  const getColorByMethod = (method) => {
+    switch (method) {
+      case "POST":
+        return "green";
+      case "PUT":
+        return "orange";
+      case "GET":
+        return "blue";
+      case "DELETE":
+        return "red";
+      default:
+        return "gray";
+    }
+  };
 
   const columns = [
     {
       title: (
         <div className="text-center">
-          <span>Hình ảnh</span>
+          <span>Tên quyền hạn</span>
         </div>
       ),
-      dataIndex: "categoryThumbnail",
-      align: "center",
-      render: (categoryThumbnail) => (
-        <div className="flex justify-center">
-          <img
-            src={categoryThumbnail.url}
-            alt="category"
-            className="w-8 h-8 object-cover rounded-md"
-          />
-        </div>
-      ),
+      dataIndex: "permissionName",
     },
     {
       title: (
         <div className="text-center">
-          <span>Tên danh mục</span>
+          <span>Module</span>
         </div>
       ),
-      dataIndex: "categoryName",
-    },
-    {
-      title: (
-        <div className="text-center">
-          <span>Trạng thái</span>
-        </div>
-      ),
-      dataIndex: "isActive",
+      dataIndex: "module",
       align: "center",
-      render: (isActive) => {
-        return isActive ? (
-          <Tag color="blue">ACTIVE</Tag>
-        ) : (
-          <Tag color="gray">INACTIVE</Tag>
-        );
-      },
       filters: [
         {
           text: "ACTIVE",
@@ -105,36 +96,29 @@ const Category = () => {
       ],
       filteredValue: [searchParams.get("isActive")],
       filterMultiple: false,
+      width: "20%",
     },
     {
       title: (
         <div className="text-center">
-          <span>Ngày tạo</span>
+          <span>Phương thức HTTP</span>
         </div>
       ),
-      dataIndex: "createdAt",
+      dataIndex: "method",
       align: "center",
-      render: (createdAt) => moment(createdAt).format("DD/MM/YYYY"),
-      showSorterTooltip: {
-        target: "sorter-icon",
+      render: (method) => {
+        return <Tag color={getColorByMethod(method)}>{method}</Tag>;
       },
-      sorter: true,
-      sortOrder: getSortOrder(searchParams, "createdAt"),
+      width: "15%",
     },
     {
       title: (
         <div className="text-center">
-          <span>Ngày cập nhật</span>
+          <span>Đường dẫn API</span>
         </div>
       ),
-      dataIndex: "updatedAt",
-      align: "center",
-      render: (updatedAt) => moment(updatedAt).format("DD/MM/YYYY"),
-      showSorterTooltip: {
-        target: "sorter-icon",
-      },
-      sorter: true,
-      sortOrder: getSortOrder(searchParams, "updatedAt"),
+      dataIndex: "apiPath",
+      align: "left",
     },
     {
       title: (
@@ -142,6 +126,7 @@ const Category = () => {
           <span>Hành động</span>
         </div>
       ),
+      width: "10%",
       dataIndex: "action",
       align: "center",
       render: (_, record) => {
@@ -149,7 +134,7 @@ const Category = () => {
           <Button
             type="text"
             onClick={() => {
-              setSelectedCategory(record);
+              setSelectedPermission(record);
               setOpen(true);
             }}
           >
@@ -163,24 +148,24 @@ const Category = () => {
   return (
     <>
       <DataTable
-        title="Danh mục"
-        searchPlaceholder="Nhập tên danh mục để tìm kiếm..."
-        data={categories}
+        title="Quyền hạn"
+        searchPlaceholder={"Nhập tên quyền hạn để tìm kiếm..."}
+        data={permissions}
         loading={loading}
         columns={columns}
         setOpenForm={setOpen}
-        setSelectedItem={setSelectedCategory}
+        setSelectedItem={setSelectedPermission}
         setFetchData={setFetchData}
         pagination={pagination}
       />
-      <CategoryForm
+      <PermissionForm
         open={open}
         setOpen={setOpen}
-        data={selectedCategory}
+        data={selectedPermission}
         setFetchData={setFetchData}
       />
     </>
   );
 };
 
-export default Category;
+export default Permission;

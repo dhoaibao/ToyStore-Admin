@@ -8,6 +8,8 @@ import Order from "../pages/Order";
 import Promotion from "../pages/Promotion";
 import Voucher from "../pages/Voucher";
 import User from "../pages/User";
+import Role from "../pages/Role";
+import Permission from "../pages/Permission";
 
 const routes = [
   {
@@ -59,6 +61,16 @@ const routes = [
     id: "user",
     path: "/users",
     element: <User />,
+  },
+  {
+    id: "role",
+    path: "/roles",
+    element: <Role />,
+  },
+  {
+    id: "permission",
+    path: "/permission",
+    element: <Permission />,
   },
 ];
 

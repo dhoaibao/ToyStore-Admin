@@ -33,18 +33,24 @@ const UserDetail = ({ open, setOpen, data }) => {
     },
     {
       key: "3",
+      label: "Vai trò:",
+      span: "filled",
+      children: data?.role?.roleName,
+    },
+    {
+      key: "4",
       label: "Email:",
       span: "filled",
       children: data?.email,
     },
     {
-      key: "4",
+      key: "5",
       span: "filled",
       label: "Số điện thoại:",
       children: data?.phone,
     },
     {
-      key: "5",
+      key: "6",
       span: "filled",
       label: "Trạng thái:",
       children: data?.isActive ? (
@@ -54,13 +60,13 @@ const UserDetail = ({ open, setOpen, data }) => {
       ),
     },
     {
-      key: "6",
+      key: "7",
       label: "Giới tính",
       span: "filled",
       children: data?.gender ? "Nam" : "Nữ",
     },
     {
-      key: "7",
+      key: "8",
       label: "Ngày sinh",
       span: "filled",
       children: moment(data?.birthday).format("DD/MM/YYYY"),

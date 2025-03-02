@@ -1,18 +1,18 @@
 import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
-import { categoryService } from "../services";
+import { roleService } from "../services";
 import moment from "moment";
 import { Pencil } from "lucide-react";
-import CategoryForm from "../components/form/CategoryForm";
+import RoleForm from "../components/form/RoleForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { getSortOrder } from "../utils";
 
-const Category = () => {
-  const [categories, setCategories] = useState([]);
+const Role = () => {
+  const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
   const [fetchData, setFetchData] = useState(true);
   const [pagination, setPagination] = useState({
     totalPages: 0,
@@ -27,14 +27,14 @@ const Category = () => {
   );
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchRoles = async () => {
       setLoading(true);
       try {
-        const response = await categoryService.getAllCategories(
+        const response = await roleService.getAllRoles(
           searchParams.toString()
         );
-        setCategories(
-          response.data.map((item) => ({ ...item, key: item.categoryId }))
+        setRoles(
+          response.data.map((item) => ({ ...item, key: item.roleId }))
         );
         setPagination({
           totalPages: response.pagination.totalPages,
@@ -44,39 +44,21 @@ const Category = () => {
         setLoading(false);
         setFetchData(false);
       } catch (error) {
-        console.error("Failed to fetch category list: ", error.data);
+        console.error("Failed to fetch role list: ", error.data);
         setLoading(false);
       }
     };
-    if (fetchData || searchParams) fetchCategories();
+    if (fetchData || searchParams) fetchRoles();
   }, [fetchData, searchParams]);
 
   const columns = [
     {
       title: (
         <div className="text-center">
-          <span>Hình ảnh</span>
+          <span>Tên vai trò</span>
         </div>
       ),
-      dataIndex: "categoryThumbnail",
-      align: "center",
-      render: (categoryThumbnail) => (
-        <div className="flex justify-center">
-          <img
-            src={categoryThumbnail.url}
-            alt="category"
-            className="w-8 h-8 object-cover rounded-md"
-          />
-        </div>
-      ),
-    },
-    {
-      title: (
-        <div className="text-center">
-          <span>Tên danh mục</span>
-        </div>
-      ),
-      dataIndex: "categoryName",
+      dataIndex: "roleName",
     },
     {
       title: (
@@ -149,7 +131,7 @@ const Category = () => {
           <Button
             type="text"
             onClick={() => {
-              setSelectedCategory(record);
+              setSelectedRole(record);
               setOpen(true);
             }}
           >
@@ -163,24 +145,33 @@ const Category = () => {
   return (
     <>
       <DataTable
-        title="Danh mục"
-        searchPlaceholder="Nhập tên danh mục để tìm kiếm..."
-        data={categories}
+        title="Vai trò"
+        searchPlaceholder={"Nhập tên vai trò để tìm kiếm..."}
+        data={roles}
         loading={loading}
         columns={columns}
         setOpenForm={setOpen}
-        setSelectedItem={setSelectedCategory}
+        setSelectedItem={setSelectedRole}
         setFetchData={setFetchData}
         pagination={pagination}
+        expandable={{
+          expandedRowRender: (record) => (
+            <p className="m-0">
+              <span className="font-semibold">Mô tả:</span> {record.roleDesc}
+            </p>
+          ),
+          rowExpandable: (record) =>
+            record.roleName !== "Không có mô tả về vai trò này!",
+        }}
       />
-      <CategoryForm
+      <RoleForm
         open={open}
         setOpen={setOpen}
-        data={selectedCategory}
+        data={selectedRole}
         setFetchData={setFetchData}
       />
     </>
   );
 };
 
-export default Category;
+export default Role;

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, message } from "antd";
+import { Modal, Form, Input, message, Switch } from "antd";
 import { brandService } from "../../services";
 
 const BrandForm = ({ open, setOpen, data, setFetchData }) => {
@@ -75,6 +75,19 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
           rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
         >
           <Input.TextArea autoSize={{ minRows: 5, maxRows: 5 }} />
+        </Form.Item>
+        <Form.Item
+          label="Trạng thái:"
+          name="isActive"
+          valuePropName="checked"
+          initialValue={true}
+          rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
+        >
+          <Switch
+            checkedChildren="ACTIVE"
+            unCheckedChildren="INACTIVE"
+            defaultChecked
+          />
         </Form.Item>
       </Form>
     </Modal>

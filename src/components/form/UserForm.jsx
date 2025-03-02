@@ -11,7 +11,7 @@ import {
   Switch,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { userService } from "../../services";
+import { userService, roleService } from "../../services";
 import { fetchImage } from "../../utils";
 import dayjs from "dayjs";
 
@@ -20,11 +20,18 @@ const UserForm = ({ open, setOpen, data, setFetchData }) => {
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
+  const [roleOptions, setRoleOptions] = useState([]);
 
   useEffect(() => {
     const loadImage = async () => {
+      setLoadingImage(true);
+      const response = await roleService.getAllRoles();
+      const roles = response.data.map((role) => ({
+        label: role.roleName,
+        value: role.roleId,
+      }));
+      setRoleOptions(roles);
       if (data) {
-        setLoadingImage(true);
         form.setFieldsValue(data);
 
         if (data.avatar?.url) {
@@ -44,11 +51,11 @@ const UserForm = ({ open, setOpen, data, setFetchData }) => {
         } else {
           setFileList([]);
         }
-        setLoadingImage(false);
       } else {
         form.resetFields();
         setFileList([]);
       }
+      setLoadingImage(false);
     };
 
     if (open) loadImage();
@@ -153,19 +160,32 @@ const UserForm = ({ open, setOpen, data, setFetchData }) => {
             >
               <Input placeholder="Nhập họ tên" />
             </Form.Item>
-            <Form.Item
-              label="Trạng thái:"
-              name="isActive"
-              valuePropName="checked"
-              initialValue={true}
-              rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
-            >
-              <Switch
-                checkedChildren="ACTIVE"
-                unCheckedChildren="INACTIVE"
-                defaultChecked
-              />
-            </Form.Item>
+            <div className="flex flex-row space-x-2">
+              <Form.Item
+                className="w-1/3"
+                label="Trạng thái:"
+                name="isActive"
+                valuePropName="checked"
+                initialValue={true}
+                rules={[
+                  { required: true, message: "Vui lòng chọn trạng thái" },
+                ]}
+              >
+                <Switch
+                  checkedChildren="ACTIVE"
+                  unCheckedChildren="INACTIVE"
+                  defaultChecked
+                />
+              </Form.Item>
+              <Form.Item
+                className="w-2/3"
+                label="Vai trò:"
+                name="roleId"
+                rules={[{ required: true, message: "Vui lòng chọn vai trò" }]}
+              >
+                <Select placeholder="Chọn vai trò" options={roleOptions} />
+              </Form.Item>
+            </div>
           </div>
         </div>
         <div className="flex flex-row space-x-2">

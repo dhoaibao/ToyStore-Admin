@@ -15,7 +15,7 @@ const Login = () => {
   const handleLogin = async (values) => {
     setLoading(true);
     try {
-      const response = await authService.signIn(values);
+      const response = await authService.signInAdmin(values);
       const { accessToken, refreshToken } = response.data;
 
       localStorage.setItem("accessToken", accessToken);
@@ -25,7 +25,7 @@ const Login = () => {
 
       navigate("/");
     } catch (error) {
-      console.error(error.data);
+      console.error(error);
       message.error("Tài khoản không hợp lệ!");
     } finally {
       setLoading(false);

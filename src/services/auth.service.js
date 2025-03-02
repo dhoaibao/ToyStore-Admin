@@ -5,8 +5,8 @@ class AuthService {
         this.api = createApiClient(path);
     }
 
-    async signIn(data) {
-        const response = await this.api.post('/sign-in', data);
+    async signInAdmin(data) {
+        const response = await this.api.post('/sign-in-admin', data);
         return await response.json();
     }
 

@@ -37,12 +37,15 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
       }
       setFetchData(true);
     } catch (error) {
-      if (error.data.message === "Brand already exists!") {
-        message.error("Thương hiệu đã tồn tại!");
-      } else {
-        message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+      switch (error.message) {
+        case "Authorization: Permission denied!":
+          message.error("Bạn không có quyền sử dụng tính năng này!");
+          break;
+        default:
+          message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+          break;
       }
-      console.error(error);
+      console.log(error);
     }
     setLoading(false);
     onClose();

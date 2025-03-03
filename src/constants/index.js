@@ -35,3 +35,18 @@ export const COMPONENT_MAP = {
   AUTOCOMPLETE: React.createElement(AutoComplete),
   INPUT: React.createElement(Input),
 };
+
+export const MODULES = [
+  'PRODUCT',
+  'CATEGORY',
+  'BRAND',
+  'PRODUCT_INFORMATION',
+  'PROMOTION',
+  'VOUCHER',
+  'ORDER',
+  'REVIEW',
+  'USER',
+  'ROLE',
+  'PERMISSION',
+  'SYSTEM_CONFIGURATION',
+]

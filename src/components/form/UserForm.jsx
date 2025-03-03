@@ -106,10 +106,16 @@ const UserForm = ({ open, setOpen, data, setFetchData }) => {
       setFetchData(true);
       onClose();
     } catch (error) {
-      if (error.message === "Email already exists!") {
-        message.error("Email đã tồn tại!");
-      } else {
-        message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+      switch (error.message) {
+        case "Email already exists!":
+          message.error("Email đã tồn tại!");
+          break;
+        case "Authorization: Permission denied!":
+          message.error("Bạn không có quyền sử dụng tính năng này!");
+          break;
+        default:
+          message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+          break;
       }
       console.error(error);
     }

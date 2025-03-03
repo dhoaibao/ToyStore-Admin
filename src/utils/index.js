@@ -5,7 +5,7 @@ import { ICON_MAP, ORDER_STATUS } from "../constants";
 export const generateAvatar = (identifier, name) => {
     const hash = CryptoJS.MD5(identifier || "default").toString();
     const color = `#${hash.slice(0, 6)}`;
-    const initial = name ? name.charAt(0).toUpperCase() : "U"; // Ký tự đầu tiên hoặc mặc định là "U"
+    const initial = name ? name.charAt(0).toUpperCase() : "U";
 
     return { color, initial };
 };
@@ -49,9 +49,11 @@ export const getStepStatus = (statusName) => {
 };
 
 export const generateStepItems = (orderTrackings) => {
-    const hasCanceled = orderTrackings.some(
+    const canceledIndex = orderTrackings.findIndex(
         (track) => track.orderStatus.statusName === "canceled"
     );
+
+    const hasCanceled = canceledIndex !== -1;
 
     let statuses = [
         "pending",
@@ -61,7 +63,7 @@ export const generateStepItems = (orderTrackings) => {
     ];
 
     if (hasCanceled) {
-        statuses = statuses.map((status) => status === "pending" ? "canceled" : status);
+        statuses[canceledIndex] = "canceled";
     }
 
     return statuses.map((key) => {

@@ -91,12 +91,18 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
       setFetchData(true);
       onClose();
     } catch (error) {
-      if (error.message === "Category already exists!") {
-        message.error("Danh mục đã tồn tại!");
-      } else {
-        message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+      switch (error.message) {
+        case "Category already exists!":
+          message.error("Danh mục đã tồn tại!");
+          break;
+        case "Authorization: Permission denied!":
+          message.error("Bạn không có quyền sử dụng tính năng này!");
+          break;
+        default:
+          message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+          break;
       }
-      console.error(error);
+      console.log(error);
     }
     setLoading(false);
   };

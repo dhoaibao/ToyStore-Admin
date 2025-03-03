@@ -16,10 +16,7 @@ const OrderDetail = ({ open, setOpen, data }) => {
           <span className="text-xs">{item.description}</span>
         ) : null,
       })),
-      currentStep:
-        lastTracking?.orderStatus.orderStatusId === 5
-          ? 0
-          : lastTracking?.orderStatus.orderStatusId - 1 || 0,
+      currentStep: trackings.length - 1,
       stepStatus: getStepStatus(lastTracking?.orderStatus.statusName),
     };
   }, [data?.orderTrackings]);

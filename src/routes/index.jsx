@@ -69,7 +69,7 @@ const routes = [
   },
   {
     id: "permission",
-    path: "/permission",
+    path: "/permissions",
     element: <Permission />,
   },
 ];

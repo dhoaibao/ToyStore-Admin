@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, message, Switch, Select } from "antd";
+import { Modal, Form, Input, message, Select } from "antd";
 import { permissionService } from "../../services";
+import { MODULES } from "../../constants";
 
 const PermissionForm = ({ open, setOpen, data, setFetchData }) => {
   const [form] = Form.useForm();
@@ -38,12 +39,18 @@ const PermissionForm = ({ open, setOpen, data, setFetchData }) => {
       setFetchData(true);
       onClose();
     } catch (error) {
-      if (error.message === "Permission already exists!") {
-        message.error("Quyền hạn đã tồn tại!");
-      } else {
-        message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+      switch (error.message) {
+        case "Permission already exists!":
+          message.error("Quyền hạn đã tồn tại!");
+          break;
+        case "Authorization: Permission denied!":
+          message.error("Bạn không có quyền sử dụng tính năng này!");
+          break;
+        default:
+          message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+          break;
       }
-      console.error(error);
+      console.log(error);
     }
     setLoading(false);
   };
@@ -76,7 +83,12 @@ const PermissionForm = ({ open, setOpen, data, setFetchData }) => {
             name="module"
             rules={[{ required: true, message: "Vui lòng nhập module" }]}
           >
-            <Input />
+            <Select
+              options={MODULES.map((module) => ({
+                label: module,
+                value: module,
+              }))}
+            />
           </Form.Item>
           <Form.Item
             className="w-1/2"

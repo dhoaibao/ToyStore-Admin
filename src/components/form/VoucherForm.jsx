@@ -49,12 +49,17 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
       setFetchData(true);
       onClose();
     } catch (error) {
-      if (error.message === "Voucher code already exists!") {
-        message.error("Mã giảm giá đã tồn tại!");
-      } else {
-        message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+      switch (error.message) {
+        case "Voucher code already exists!":
+          message.error("Mã giảm giá đã tồn tại!");
+          break;
+        case "Authorization: Permission denied!":
+          message.error("Bạn không có quyền sử dụng tính năng này!");
+          break;
+        default:
+          message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+          break;
       }
-      console.error(error);
     }
     setLoading(false);
   };

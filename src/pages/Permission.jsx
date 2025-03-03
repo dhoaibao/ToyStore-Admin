@@ -1,13 +1,12 @@
 import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { permissionService } from "../services";
-import moment from "moment";
 import { Pencil } from "lucide-react";
 import PermissionForm from "../components/form/PermissionForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
+import { MODULES } from "../constants";
 import { getSortOrder } from "../utils";
-import { render } from "react-dom";
 
 const Permission = () => {
   const [permissions, setPermissions] = useState([]);
@@ -84,19 +83,18 @@ const Permission = () => {
       ),
       dataIndex: "module",
       align: "center",
-      filters: [
-        {
-          text: "ACTIVE",
-          value: true,
-        },
-        {
-          text: "INACTIVE",
-          value: false,
-        },
-      ],
-      filteredValue: [searchParams.get("isActive")],
+      filters: MODULES.map((module) => ({
+        text: module,
+        value: module,
+      })),
+      filteredValue: [searchParams.get("module")],
       filterMultiple: false,
       width: "20%",
+      showSorterTooltip: {
+        target: "sorter-icon",
+      },
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "module"),
     },
     {
       title: (
@@ -109,7 +107,15 @@ const Permission = () => {
       render: (method) => {
         return <Tag color={getColorByMethod(method)}>{method}</Tag>;
       },
-      width: "15%",
+      width: "17%",
+      filters: [
+        { text: "GET", value: "GET" },
+        { text: "POST", value: "POST" },
+        { text: "PUT", value: "PUT" },
+        { text: "DELETE", value: "DELETE" },
+      ],
+      filteredValue: [searchParams.get("method")],
+      filterMultiple: false,
     },
     {
       title: (

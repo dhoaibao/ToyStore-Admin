@@ -154,15 +154,6 @@ const Role = () => {
         setSelectedItem={setSelectedRole}
         setFetchData={setFetchData}
         pagination={pagination}
-        expandable={{
-          expandedRowRender: (record) => (
-            <p className="m-0">
-              <span className="font-semibold">Mô tả:</span> {record.roleDesc}
-            </p>
-          ),
-          rowExpandable: (record) =>
-            record.roleName !== "Không có mô tả về vai trò này!",
-        }}
       />
       <RoleForm
         open={open}

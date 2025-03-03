@@ -14,7 +14,7 @@ const RoleForm = ({ open, setOpen, data, setFetchData }) => {
   useEffect(() => {
     const setData = async () => {
       setLoadingForm(true);
-      const response = await permissionService.getAllPermissions();
+      const response = await permissionService.getAllPermissions('limit=-1');
       setPermissions(response.data);
 
       if (data) {
@@ -49,10 +49,16 @@ const RoleForm = ({ open, setOpen, data, setFetchData }) => {
       setFetchData(true);
       onClose();
     } catch (error) {
-      if (error.message === "Role already exists!") {
-        message.error("Vai trò đã tồn tại!");
-      } else {
-        message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+      switch (error.message) {
+        case "Role already exists!":
+          message.error("Vai trò đã tồn tại!");
+          break;
+        case "Authorization: Permission denied!":
+          message.error("Bạn không có quyền sử dụng tính năng này!");
+          break;
+        default:
+          message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+          break;
       }
       console.error(error);
     }

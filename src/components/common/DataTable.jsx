@@ -46,11 +46,11 @@ const DataTable = ({
   };
 
   const onChange = (pagination, filters, sorter) => {
-    console.log("params", filters);
+    console.log("params", sorter);
 
     if (filters) {
       Object.keys(filters).forEach((key) => {
-        if (filters[key] !== undefined && filters[key].length > 0) {
+        if (filters[key] !== null && filters[key].length > 0) {
           searchParams.set(key, filters[key]);
         } else {
           searchParams.delete(key);

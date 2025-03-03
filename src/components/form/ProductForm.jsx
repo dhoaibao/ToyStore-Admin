@@ -44,10 +44,10 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoadingData(true);
-      const brands = await brandService.getAllBrands();
-      const categories = await categoryService.getAllCategories();
+      const brands = await brandService.getAllBrands('limit=-1');
+      const categories = await categoryService.getAllCategories('limit=-1');
       const productsInformation =
-        await productInformationService.getAllProductsInformation();
+        await productInformationService.getAllProductsInformation('limit=-1');
 
       setBrands(brands.data);
       setCategories(categories.data);
@@ -154,6 +154,8 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
     // Append productInfos to formData
     formData.append("productInfos", JSON.stringify(productInfos));
 
+    console.log("formData", JSON.stringify(productInfos));
+
     const existingFiles = fileList.filter((file) => file.uploadImageId);
     const newFiles = fileList.filter((file) => !file.uploadImageId);
 
@@ -180,12 +182,18 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
       setFetchData(true);
       onClose();
     } catch (error) {
-      if (error.message === "Product already exists!") {
-        message.error("Sản phẩm đã tồn tại!");
-      } else {
-        message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+      switch (error.message) {
+        case "Product already exists!":
+          message.error("Sản phẩm đã tồn tại!");
+          break;
+        case "Authorization: Permission denied!":
+          message.error("Bạn không có quyền sử dụng tính năng này!");
+          break;
+        default:
+          message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+          break;
       }
-      console.error(error);
+      console.log(error);
     }
     setLoading(false);
   };
@@ -237,6 +245,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 beforeUpload={() => false}
                 onChange={handleUploadChange}
                 onRemove={handleRemove}
+                multiple
               >
                 {fileList.length < 10 && (
                   <div className="flex-col">

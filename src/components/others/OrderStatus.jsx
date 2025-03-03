@@ -5,7 +5,7 @@ import { useMemo, useState, useEffect } from "react";
 import { orderService } from "../../services";
 
 const OrderStatus = ({ open, setOpen, data, setFetchData }) => {
-  const { stepItems, currentStep, stepStatus } = useMemo(() => {
+  const { stepItems, currentStep, stepStatus, lastTracking } = useMemo(() => {
     const trackings = data?.orderTrackings || [];
     const lastTracking = trackings[trackings.length - 1];
     return {
@@ -15,11 +15,9 @@ const OrderStatus = ({ open, setOpen, data, setFetchData }) => {
           <span className="text-xs">{item.description}</span>
         ) : null,
       })),
-      currentStep:
-        lastTracking?.orderStatus.orderStatusId === 5
-          ? 0
-          : lastTracking?.orderStatus.orderStatusId - 1 || 0,
+      currentStep: trackings.length - 1,
       stepStatus: getStepStatus(lastTracking?.orderStatus.statusName),
+      lastTracking,
     };
   }, [data?.orderTrackings]);
 
@@ -32,7 +30,10 @@ const OrderStatus = ({ open, setOpen, data, setFetchData }) => {
   }, [currentStep, open]);
 
   const handleChangeStep = (value) => {
-    if (value - currentStep === 1) {
+    if (
+      value - currentStep === 1 &&
+      lastTracking?.orderStatus.orderStatusId !== 5
+    ) {
       setCurrent(value);
     }
   };

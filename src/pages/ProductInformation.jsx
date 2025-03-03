@@ -56,7 +56,7 @@ const ProductInfo = () => {
     {
       title: (
         <div className="text-center">
-          <span>Tên thương hiệu</span>
+          <span>Tên thông tin</span>
         </div>
       ),
       dataIndex: "productInfoName",

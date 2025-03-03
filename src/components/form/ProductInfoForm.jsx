@@ -46,10 +46,16 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
       setFetchData(true);
       onClose();
     } catch (error) {
-      if (error.message === "Product information already exists!") {
-        message.error("Thông tin sản phẩm đã tồn tại!");
-      } else {
-        message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+      switch (error.message) {
+        case "Product information already exists!":
+          message.error("Thông tin sản phẩm đã tồn tại!");
+          break;
+        case "Authorization: Permission denied!":
+          message.error("Bạn không có quyền sử dụng tính năng này!");
+          break;
+        default:
+          message.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+          break;
       }
       console.error(error);
     }
@@ -70,6 +76,7 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
       centered
       okText="Lưu"
       cancelText="Hủy"
+      className="max-h-[95vh] overflow-y-auto scrollbar-hide"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item
@@ -90,7 +97,7 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
             placeholder="Chọn loại"
             onChange={(value) => {
               setSelectedType(value);
-              form.resetFields(["options"]);
+              // form.resetFields(["options"]);
             }}
             allowClear
           >
@@ -101,7 +108,7 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
           </Select>
         </Form.Item>
         {(selectedType === "SELECT" || selectedType === "AUTOCOMPLETE") && (
-          <Form.Item label="Options:" name="options">
+          <Form.Item label="Tùy chọn:" name="options">
             <Form.List name="options">
               {(fields, { add, remove }) => (
                 <>
@@ -116,7 +123,7 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
                         style={{ flex: 1, marginBottom: 0 }}
                       >
                         <Input
-                          placeholder="Nhập gía trị"
+                          placeholder="Nhập giá trị"
                           onChange={() =>
                             form.setFieldsValue({
                               options: form.getFieldValue("options"),
@@ -139,7 +146,7 @@ const ProductInfoForm = ({ open, setOpen, data, setFetchData }) => {
                     onClick={() => add()}
                   >
                     <CirclePlus size={18} strokeWidth={1} />
-                    Thêm option
+                    Thêm tùy chọn
                   </Button>
                 </>
               )}

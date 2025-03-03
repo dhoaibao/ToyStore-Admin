@@ -26,7 +26,11 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.error(error);
-      message.error("Tài khoản không hợp lệ!");
+      if (error.message === "User is inactive!") {
+        message.error("Tài khoản đang bị khóa");
+      } else {
+        message.error("Email hoặc mật khẩu không đúng");
+      }
     } finally {
       setLoading(false);
     }
@@ -39,7 +43,12 @@ const Login = () => {
       </div>
       <div className="flex flex-col items-center justify-center w-1/2">
         <p className="font-semibold text-2xl mb-2">Đăng nhập</p>
-        <Form layout="vertical" form={loginForm} onFinish={handleLogin} className="w-full p-2">
+        <Form
+          layout="vertical"
+          form={loginForm}
+          onFinish={handleLogin}
+          className="w-full p-2"
+        >
           <Form.Item
             label="Email"
             name="email"

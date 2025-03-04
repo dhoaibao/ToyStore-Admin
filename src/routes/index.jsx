@@ -10,6 +10,7 @@ import Voucher from "../pages/Voucher";
 import User from "../pages/User";
 import Role from "../pages/Role";
 import Permission from "../pages/Permission";
+import Review from "../pages/Review";
 
 const routes = [
   {
@@ -71,6 +72,11 @@ const routes = [
     id: "permission",
     path: "/permissions",
     element: <Permission />,
+  },
+  {
+    id: "review",
+    path: "/reviews",
+    element: <Review />,
   },
 ];
 

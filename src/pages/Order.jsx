@@ -210,6 +210,7 @@ const Order = () => {
         setSelectedItem={setSelectedOrder}
         setFetchData={setFetchData}
         pagination={pagination}
+        addButton={false}
       />
       <OrderForm
         open={open}

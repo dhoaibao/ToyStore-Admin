@@ -70,7 +70,9 @@ const OrderStatus = ({ open, setOpen, data, setFetchData }) => {
 
   const disabled =
     data?.orderTrackings[data?.orderTrackings.length - 1]?.orderStatus
-      ?.orderStatusId === 5 || current === 3;
+      ?.orderStatusId === 5 ||
+    data?.orderTrackings[data?.orderTrackings.length - 1]?.orderStatus
+      ?.orderStatusId === 4;
 
   return (
     <Modal

@@ -15,6 +15,7 @@ const DataTable = ({
   setOpenForm,
   setSelectedItem,
   expandable,
+  addButton = true,
 }) => {
   const [searchText, setSearchText] = useState("");
 
@@ -98,16 +99,18 @@ const DataTable = ({
           <Button onClick={handleRefresh}>
             <RotateCcw strokeWidth={1} size={20} />
           </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              setSelectedItem(null);
-              setOpenForm(true);
-            }}
-          >
-            <Plus strokeWidth={1} size={20} />
-            Thêm mới
-          </Button>
+          {addButton && (
+            <Button
+              type="primary"
+              onClick={() => {
+                setSelectedItem(null);
+                setOpenForm(true);
+              }}
+            >
+              <Plus strokeWidth={1} size={20} />
+              Thêm mới
+            </Button>
+          )}
         </div>
       </div>
       <Table
@@ -151,6 +154,7 @@ DataTable.propTypes = {
   setOpenForm: PropTypes.func.isRequired,
   setSelectedItem: PropTypes.func.isRequired,
   expandable: PropTypes.object,
+  addButton: PropTypes.bool,
 };
 
 export default DataTable;

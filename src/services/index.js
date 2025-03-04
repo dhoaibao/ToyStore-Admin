@@ -12,3 +12,4 @@ export * from "./voucher.service";
 export * from "./productInfo.service";
 export * from "./role.service";
 export * from "./permission.service";
+export * from "./review.service";

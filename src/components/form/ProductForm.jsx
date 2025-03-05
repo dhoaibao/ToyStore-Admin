@@ -44,10 +44,10 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoadingData(true);
-      const brands = await brandService.getAllBrands('limit=-1');
-      const categories = await categoryService.getAllCategories('limit=-1');
+      const brands = await brandService.getAllBrands("limit=-1");
+      const categories = await categoryService.getAllCategories("limit=-1");
       const productsInformation =
-        await productInformationService.getAllProductsInformation('limit=-1');
+        await productInformationService.getAllProductsInformation("limit=-1");
 
       setBrands(brands.data);
       setCategories(categories.data);

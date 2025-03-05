@@ -42,13 +42,13 @@ const Product = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch product list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchProducts();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const columns = [

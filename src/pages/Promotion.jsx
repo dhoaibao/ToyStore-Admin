@@ -42,13 +42,13 @@ const Promotion = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch promotion list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchPromotions();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const columns = [

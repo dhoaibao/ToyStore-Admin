@@ -47,13 +47,13 @@ const Order = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch order list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchOrders();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const columns = [

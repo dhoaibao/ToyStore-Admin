@@ -67,7 +67,7 @@ const Sidebar = () => {
       {
         to: "/chats",
         title: "Tin nhắn",
-        module: "CHAT",
+        module: null,
         icon: <MessageCircle strokeWidth={1} />,
       },
       {
@@ -102,7 +102,7 @@ const Sidebar = () => {
   );
 
   return (
-    <div className="bg-primary text-white h-screen p-4 flex flex-col">
+    <div className="bg-primary text-white h-full p-4 flex flex-col">
       <div className="sticky top-0 pt-4 z-10 bg-primary">
         <div className="flex justify-center bg-white rounded-xl">
           <img src="/src/assets/Logo(150x50).png" alt="Logo" className="h-12" />

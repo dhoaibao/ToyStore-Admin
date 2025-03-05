@@ -42,13 +42,13 @@ const Brand = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch brand list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchBrands();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const columns = [

@@ -42,13 +42,13 @@ const Category = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch category list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchCategories();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const columns = [

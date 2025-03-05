@@ -42,13 +42,13 @@ const Permission = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch permission list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchPermissions();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const getColorByMethod = (method) => {

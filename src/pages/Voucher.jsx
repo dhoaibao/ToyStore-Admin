@@ -42,13 +42,13 @@ const Voucher = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch voucher list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchVouchers();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const columns = [
@@ -110,7 +110,7 @@ const Voucher = () => {
         </p>
       ),
       sorter: true,
-      sortOrder: getSortOrder(searchParams, "collectedQuantity")
+      sortOrder: getSortOrder(searchParams, "collectedQuantity"),
     },
     {
       title: (
@@ -121,7 +121,7 @@ const Voucher = () => {
       align: "center",
       dataIndex: "currentUsedQuantity",
       sorter: true,
-      sortOrder: getSortOrder(searchParams, "currentUsedQuantity")
+      sortOrder: getSortOrder(searchParams, "currentUsedQuantity"),
     },
     {
       title: (
@@ -136,7 +136,7 @@ const Voucher = () => {
         target: "sorter-icon",
       },
       sorter: true,
-      sortOrder: getSortOrder(searchParams, "startDate")
+      sortOrder: getSortOrder(searchParams, "startDate"),
     },
     {
       title: (
@@ -151,7 +151,7 @@ const Voucher = () => {
         target: "sorter-icon",
       },
       sorter: true,
-      sortOrder: getSortOrder(searchParams, "endDate")
+      sortOrder: getSortOrder(searchParams, "endDate"),
     },
     {
       title: (

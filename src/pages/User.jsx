@@ -39,13 +39,13 @@ const User = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch user list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchUsers();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const columns = [

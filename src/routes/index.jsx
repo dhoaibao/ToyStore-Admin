@@ -11,6 +11,7 @@ import User from "../pages/User";
 import Role from "../pages/Role";
 import Permission from "../pages/Permission";
 import Review from "../pages/Review";
+import Chat from "../pages/Chat";
 
 const routes = [
   {
@@ -77,6 +78,11 @@ const routes = [
     id: "review",
     path: "/reviews",
     element: <Review />,
+  },
+  {
+    id: "chat",
+    path: "/chats",
+    element: <Chat />,
   },
 ];
 

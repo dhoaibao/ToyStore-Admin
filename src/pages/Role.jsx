@@ -42,13 +42,13 @@ const Role = () => {
           total: response.pagination.total,
         });
         setLoading(false);
-        setFetchData(false);
       } catch (error) {
         console.error("Failed to fetch role list: ", error.data);
         setLoading(false);
       }
     };
     if (fetchData || searchParams) fetchRoles();
+    setFetchData(false);
   }, [fetchData, searchParams]);
 
   const columns = [

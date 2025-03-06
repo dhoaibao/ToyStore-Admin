@@ -5,12 +5,14 @@ const userSlice = createSlice({
   initialState: {
     permissions: [],
     user: null,
+    userId: null,
     isLogin: false,
     loading: false,
     error: null,
   },
   reducers: {
     setUser: (state, action) => {
+      state.userId = action.payload?.userId;
       state.user = action.payload;
       state.permissions = action.payload?.role?.permissions || [];
       state.isLogin = !!action.payload;

@@ -83,7 +83,7 @@ const DataTable = ({
   return (
     <div className="mx-auto p-4">
       <div className="items-center mb-4">
-        <p className="text-2xl font-bold">{title}</p>
+        <p className="text-xl font-bold">{title}</p>
       </div>
       <div className="flex justify-between items-center space-x-4 mb-4">
         <Input.Search

@@ -70,11 +70,13 @@ const Chat = () => {
         if (
           !conversations.find((item) => item.sender.senderId === data.senderId)
         ) {
+          console.log(data)
           updatedConversations.push({
             sender: {
               senderId: data.senderId,
               sender: {
-                fullName: data.fullName,
+                fullName: data.senderName,
+                avatar: data.avatar,
               },
             },
             lastMessage: {

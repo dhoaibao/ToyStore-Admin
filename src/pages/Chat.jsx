@@ -1,34 +1,37 @@
 import { useState, useEffect, useRef } from "react";
 import { Avatar, List, Input, Button, Typography } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import { Check, CheckCheck } from "lucide-react";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import { Send } from "lucide-react";
+import { messageService } from "../services";
+import { generateAvatar } from "../utils";
+import { useLocation } from "react-router-dom";
 
 const { Text } = Typography;
 
 const Chat = () => {
-  const conversations = [
-    { id: 1, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 2, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 3, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 4, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 5, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 6, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 3, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 4, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 5, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-    { id: 6, name: "Nguyễn Văn A", time: "10:00 AM", content: "Hello" },
-  ];
+  const [conversations, setConversations] = useState([]);
 
   const { userId } = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [socket, setSocket] = useState(null);
+  const socketRef = useRef(null);
   const [showScrollIcon, setShowScrollIcon] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
+  const [selectedConversation, setSelectedConversation] = useState(null);
+
+  const location = useLocation();
+  const path = location.pathname;
+
+  useEffect(() => {
+    messageService.getConversations().then((result) => {
+      setConversations(result.data);
+    });
+  }, []);
 
   useEffect(() => {
     if (userId) {
@@ -36,26 +39,97 @@ const Chat = () => {
         query: { userId: userId.toString() },
       });
 
-      setSocket(newSocket);
+      socketRef.current = newSocket;
 
       newSocket.emit("joinRoom", userId);
 
+      newSocket.on("updateStatus", (senderId) => {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.senderId === senderId && !msg.isRead
+              ? { ...msg, isRead: true }
+              : msg
+          )
+        );
+      });
+
       newSocket.on("newMessage", (data) => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            ...data,
-            time: moment(data.time).format("HH:mm"),
-          },
-        ]);
+        const updatedConversations = conversations.map((item) =>
+          item.sender.senderId === data.senderId
+            ? {
+                ...item,
+                lastMessage: {
+                  content: data.content,
+                  time: data.time,
+                  isRead: false,
+                },
+              }
+            : item
+        );
+
+        if (
+          !conversations.find((item) => item.sender.senderId === data.senderId)
+        ) {
+          updatedConversations.push({
+            sender: {
+              senderId: data.senderId,
+              sender: {
+                fullName: data.fullName,
+              },
+            },
+            lastMessage: {
+              content: data.content,
+              time: data.time,
+              isRead: false,
+            },
+          });
+        }
+        setConversations(updatedConversations);
+        if (data.senderId === selectedConversation) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              ...data,
+              time: moment(data.time).format("HH:mm"),
+            },
+          ]);
+          if (path === "/chats") {
+            newSocket.emit("markAsRead", {
+              senderId: data.senderId,
+              receiverId: null,
+            });
+          }
+        }
       });
 
       return () => {
-        newSocket.off("newMessage");
-        newSocket.disconnect();
+        if (socketRef.current) {
+          socketRef.current.off("newMessage");
+          socketRef.current.off("updateStatus");
+          socketRef.current.disconnect();
+          socketRef.current = null;
+        }
       };
     }
-  }, [userId]);
+  }, [userId, path, selectedConversation, conversations]);
+
+  useEffect(() => {
+    if (selectedConversation) {
+      console.log(selectedConversation);
+      messageService.getMessages(selectedConversation).then((result) => {
+        setMessages(
+          result.data.map((msg) => ({
+            ...msg,
+            time: moment(msg.time).format("HH:mm"),
+          }))
+        );
+        socketRef.current.emit("markAsRead", {
+          senderId: selectedConversation,
+          receiverId: null,
+        });
+      });
+    }
+  }, [selectedConversation]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -80,16 +154,16 @@ const Chat = () => {
     }
   };
 
-  const sendMessage = () => {
+  const sendMessage = (senderId) => {
     if (newMessage.trim() === "") return;
 
     const newMsg = {
       senderId: userId,
-      receiverId: 2,
+      receiverId: senderId,
       content: newMessage,
       time: new Date(),
     };
-    socket.emit("replyMessage", newMsg);
+    socketRef.current.emit("replyMessage", newMsg);
     setMessages([
       ...messages,
       {
@@ -98,6 +172,21 @@ const Chat = () => {
       },
     ]);
     setNewMessage("");
+    setConversations((prev) => {
+      const updatedConversations = prev.map((item) =>
+        item.sender.senderId === senderId
+          ? {
+              ...item,
+              lastMessage: {
+                content: newMessage,
+                time: new Date(),
+                isRead: true,
+              },
+            }
+          : item
+      );
+      return updatedConversations;
+    });
   };
 
   return (
@@ -110,18 +199,51 @@ const Chat = () => {
             dataSource={conversations}
             renderItem={(item) => (
               <List.Item
-                className="hover:bg-gray-100 cursor-pointer"
+                onClick={() => setSelectedConversation(item.sender.senderId)}
+                key={item.sender.senderId}
+                className={`hover:bg-gray-100 mb-1 cursor-pointer rounded-md ${
+                  selectedConversation === item.sender.senderId && "bg-blue-100"
+                }`}
                 style={{ padding: "8px" }}
               >
                 <List.Item.Meta
-                  avatar={<Avatar src="https://via.placeholder.com/40" />}
-                  title={
-                    <div className="flex justify-between">
-                      <span>{item.name}</span>
-                      <span className="text-gray-500 text-sm">{item.time}</span>
+                  avatar={
+                    <div className="flex justify-center items-center">
+                      {(() => {
+                        const { color, initial } = generateAvatar(
+                          item.sender.sender.email,
+                          item.sender.sender.fullName
+                        );
+                        return (
+                          <Avatar
+                            src={item.sender.sender.avatar?.url}
+                            alt={item.sender.sender.fullName || "User"}
+                            size={40}
+                            style={{
+                              backgroundColor: item.sender.sender.avatar?.url
+                                ? "transparent"
+                                : color,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: 16,
+                            }}
+                          >
+                            {!item.sender.sender.avatar?.url && initial}
+                          </Avatar>
+                        );
+                      })()}
                     </div>
                   }
-                  description={item.content}
+                  title={
+                    <div className="flex justify-between items-center">
+                      <span>{item.sender.sender.fullName}</span>
+                      <span className="text-gray-500 text-xs">
+                        {moment(item.lastMessage.time).format("HH:mm")}
+                      </span>
+                    </div>
+                  }
+                  description={item.lastMessage.content}
                 />
               </List.Item>
             )}
@@ -143,7 +265,9 @@ const Chat = () => {
               <div
                 style={{
                   justifyContent:
-                    message.senderId === userId ? "flex-end" : "flex-start",
+                    message.senderId !== selectedConversation
+                      ? "flex-end"
+                      : "flex-start",
                   display: "flex",
                   marginBottom: "10px",
                 }}
@@ -154,14 +278,28 @@ const Chat = () => {
                     padding: "10px",
                     borderRadius: "10px",
                     backgroundColor:
-                      message.senderId === userId ? "#e6f7ff" : "#ffffff",
+                      message.senderId !== selectedConversation
+                        ? "#e6f7ff"
+                        : "#ffffff",
                     boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <Text>{message.content}</Text>
                   <br />
-                  <Text type="secondary" style={{ fontSize: "12px" }}>
-                    {message.time}
+                  <Text
+                    type="secondary"
+                    className="flex items-center space-x-1 text-xs"
+                  >
+                    <span>{message.time}</span>
+                    {message.senderId !== selectedConversation && (
+                      <span>
+                        {message.isRead ? (
+                          <CheckCheck strokeWidth={1} size={16} />
+                        ) : (
+                          <Check strokeWidth={1} size={16} />
+                        )}
+                      </span>
+                    )}
                   </Text>
                 </div>
               </div>
@@ -177,10 +315,13 @@ const Chat = () => {
               placeholder="Nhập tin nhắn..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onPressEnter={sendMessage}
+              onPressEnter={() => sendMessage(selectedConversation)}
               className="flex-1 mr-2"
             />
-            <Button type="primary" onClick={sendMessage}>
+            <Button
+              type="primary"
+              onClick={() => sendMessage(selectedConversation)}
+            >
               <Send strokeWidth={1} size={18} />
             </Button>
           </div>

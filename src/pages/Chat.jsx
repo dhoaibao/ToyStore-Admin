@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Avatar, List, Input, Button, Typography } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import { Check, CheckCheck } from "lucide-react";
+import { Check, CheckCheck, Send } from "lucide-react";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
-import { Send } from "lucide-react";
 import { messageService } from "../services";
 import { generateAvatar } from "../utils";
 import { useLocation } from "react-router-dom";
@@ -48,8 +47,8 @@ const Chat = () => {
           prev.map((msg) =>
             msg.senderId === senderId && !msg.isRead
               ? { ...msg, isRead: true }
-              : msg
-          )
+              : msg,
+          ),
         );
       });
 
@@ -64,13 +63,13 @@ const Chat = () => {
                   isRead: false,
                 },
               }
-            : item
+            : item,
         );
 
         if (
           !conversations.find((item) => item.sender.senderId === data.senderId)
         ) {
-          console.log(data)
+          console.log(data);
           updatedConversations.push({
             sender: {
               senderId: data.senderId,
@@ -102,6 +101,23 @@ const Chat = () => {
             });
           }
         }
+
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification(data.senderName, {
+            body: data.content,
+          });
+        } else if (
+          "Notification" in window &&
+          Notification.permission !== "denied"
+        ) {
+          Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+              new Notification(data.senderName, {
+                body: data.content,
+              });
+            }
+          });
+        }
       });
 
       return () => {
@@ -118,17 +134,31 @@ const Chat = () => {
   useEffect(() => {
     if (selectedConversation) {
       console.log(selectedConversation);
+      socketRef.current.emit("markAsRead", {
+        senderId: selectedConversation,
+        receiverId: null,
+      });
       messageService.getMessages(selectedConversation).then((result) => {
         setMessages(
           result.data.map((msg) => ({
             ...msg,
             time: moment(msg.time).format("HH:mm"),
-          }))
+          })),
         );
-        socketRef.current.emit("markAsRead", {
-          senderId: selectedConversation,
-          receiverId: null,
-        });
+        setConversations((prevConversations) =>
+          prevConversations.map((conversation) =>
+            conversation.sender.senderId === selectedConversation &&
+            conversation.sender.senderId !== userId
+              ? {
+                  ...conversation,
+                  lastMessage: {
+                    ...conversation.lastMessage,
+                    isRead: true,
+                  },
+                }
+              : conversation,
+          ),
+        );
       });
     }
   }, [selectedConversation]);
@@ -185,7 +215,7 @@ const Chat = () => {
                 isRead: true,
               },
             }
-          : item
+          : item,
       );
       return updatedConversations;
     });
@@ -214,7 +244,7 @@ const Chat = () => {
                       {(() => {
                         const { color, initial } = generateAvatar(
                           item.sender.sender.email,
-                          item.sender.sender.fullName
+                          item.sender.sender.fullName,
                         );
                         return (
                           <Avatar
@@ -238,8 +268,16 @@ const Chat = () => {
                     </div>
                   }
                   title={
-                    <div className="flex justify-between items-center">
-                      <span>{item.sender.sender.fullName}</span>
+                    <div
+                      className={`flex justify-between items-center ${!item.lastMessage.isRead && item.sender.senderId !== userId ? "font-bold" : ""}`}
+                    >
+                      <span>
+                        {item.sender.sender.fullName}
+                        {!item.lastMessage.isRead &&
+                        item.sender.senderId !== userId
+                          ? " (1)"
+                          : ""}
+                      </span>
                       <span className="text-gray-500 text-xs">
                         {moment(item.lastMessage.time).format("HH:mm")}
                       </span>

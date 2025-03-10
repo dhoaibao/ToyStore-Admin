@@ -1,4 +1,7 @@
 import { Bar } from "react-chartjs-2";
+import { TIME_INTERVAL } from "../../constants";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,25 +21,58 @@ ChartJS.register(
   Legend
 );
 
-const OrderChart = () => {
-  const data = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+const OrderChart = ({ orderData, labels, type }) => {
+  const [chartData, setChartData] = useState({
+    labels: [],
     datasets: [
       {
-        label: "Orders",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        label: "Đơn hàng",
+        data: [],
+        backgroundColor: "#223dba",
+        borderColor: "#122da6",
         borderWidth: 1,
       },
     ],
-  };
+  });
+  
+  useEffect(() => {
+    const fetchData = () => {
+      try {
+        const data = labels.map((label) => {
+          const found = orderData.find((item) => item.date === label);
+          return found ? found.value : 0;
+        });
+
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: "Đơn hàng",
+              data,
+              backgroundColor: "#223dba",
+              borderColor: "#122da6",
+              borderWidth: 1,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Error fetching order data:", error);
+      }
+    };
+
+    if (orderData && labels && type) {
+      fetchData();
+    }
+  }, [orderData, labels, type]);
 
   const options = {
     responsive: true,
     plugins: {
       legend: { position: "top" },
-      title: { display: true, text: "Weekly Orders" },
+      title: {
+        display: true,
+        text: `Thống kê đơn hàng (${TIME_INTERVAL[type]})`,
+      },
     },
     scales: {
       y: { beginAtZero: true },
@@ -44,10 +80,16 @@ const OrderChart = () => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
-      <Bar data={data} options={options} />
+    <div className="bg-white p-4 rounded-xl shadow-md">
+      <Bar data={chartData} options={options} />
     </div>
   );
+};
+
+OrderChart.propTypes = {
+  orderData: PropTypes.array.isRequired,
+  labels: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default OrderChart;

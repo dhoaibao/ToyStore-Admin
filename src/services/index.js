@@ -14,3 +14,4 @@ export * from "./role.service";
 export * from "./permission.service";
 export * from "./review.service";
 export * from "./message.service";
+export * from "./statistic.service";

@@ -1,19 +1,18 @@
-import { Card } from "antd";
 import PropTypes from "prop-types";
 
 const StatCard = ({ title, value, icon, color }) => {
   return (
-    <Card className="shadow-md hover:shadow-lg transition-shadow">
+    <div className="rounded-xl p-4 bg-secondary text-white shadow-md">
       <div className="flex items-center">
-        <div className={`p-3 rounded-full ${color}`}>
+        <div className={`p-2 rounded-full ${color}`}>
           {icon}
         </div>
-        <div className="ml-4">
-          <p className="text-gray-500 text-sm">{title}</p>
-          <p className="text-2xl font-semibold">{value}</p>
+        <div className="ml-2">
+          <p className="text-gray-100 text-sm">{title}</p>
+          <p className="text-lg font-semibold">{value}</p>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

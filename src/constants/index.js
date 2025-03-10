@@ -17,10 +17,19 @@ export const ORDER_STATUS = {
 };
 
 export const ICON_MAP = {
-  pending: React.createElement(CircleEllipsis, { key: "circle-ellipsis", strokeWidth: 1 }),
-  confirmed: React.createElement(CircleCheckBig, { key: "circle-check", strokeWidth: 1 }),
+  pending: React.createElement(CircleEllipsis, {
+    key: "circle-ellipsis",
+    strokeWidth: 1,
+  }),
+  confirmed: React.createElement(CircleCheckBig, {
+    key: "circle-check",
+    strokeWidth: 1,
+  }),
   shipping: React.createElement(Truck, { key: "truck", strokeWidth: 1 }),
-  delivered: React.createElement(PackageCheck, { key: "package-check", strokeWidth: 1 }),
+  delivered: React.createElement(PackageCheck, {
+    key: "package-check",
+    strokeWidth: 1,
+  }),
   canceled: React.createElement(CircleX, { key: "circle-x", strokeWidth: 1 }),
 };
 
@@ -37,16 +46,23 @@ export const COMPONENT_MAP = {
 };
 
 export const MODULES = [
-  'PRODUCT',
-  'CATEGORY',
-  'BRAND',
-  'PRODUCT_INFORMATION',
-  'PROMOTION',
-  'VOUCHER',
-  'ORDER',
-  'REVIEW',
-  'USER',
-  'ROLE',
-  'PERMISSION',
-  'SYSTEM_CONFIGURATION',
-]
+  "PRODUCT",
+  "CATEGORY",
+  "BRAND",
+  "PRODUCT_INFORMATION",
+  "PROMOTION",
+  "VOUCHER",
+  "ORDER",
+  "REVIEW",
+  "USER",
+  "ROLE",
+  "PERMISSION",
+  "SYSTEM_CONFIGURATION",
+];
+
+export const TIME_INTERVAL = {
+  day: "theo ngày",
+  month: "theo tháng",
+  quarter: "theo quý",
+  year: "theo năm",
+};

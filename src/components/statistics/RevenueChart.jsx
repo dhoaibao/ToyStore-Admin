@@ -78,7 +78,19 @@ const RevenueChart = ({ revenueData, labels, type }) => {
       },
     },
     scales: {
-      y: { beginAtZero: true },
+      x: {
+        title: {
+          display: true,
+          text: "Khoảng thời gian",
+        },
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Doanh thu",
+        },
+      },
     },
   };
 

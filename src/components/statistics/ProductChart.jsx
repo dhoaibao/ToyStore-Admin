@@ -71,7 +71,7 @@ const ProductChart = () => {
       legend: { position: "right" },
       title: {
         display: true,
-        text: "Phân bổ sản phẩm",
+        text: "Phân bổ sản phẩm (toàn cửa hàng)",
       },
     },
   };

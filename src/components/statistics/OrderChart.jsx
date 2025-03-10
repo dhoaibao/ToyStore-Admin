@@ -18,7 +18,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const OrderChart = ({ orderData, labels, type }) => {
@@ -34,7 +34,7 @@ const OrderChart = ({ orderData, labels, type }) => {
       },
     ],
   });
-  
+
   useEffect(() => {
     const fetchData = () => {
       try {
@@ -75,7 +75,23 @@ const OrderChart = ({ orderData, labels, type }) => {
       },
     },
     scales: {
-      y: { beginAtZero: true },
+      x: {
+        title: {
+          display: true,
+          text: "Khoảng thời gian",
+        },
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Số đơn hàng",
+        },
+        ticks: {
+          stepSize: 1,
+          precision: 0,
+        },
+      },
     },
   };
 

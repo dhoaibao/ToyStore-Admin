@@ -85,11 +85,11 @@ const RevenueChart = ({ revenueData, labels, type }) => {
         },
       },
       y: {
-        beginAtZero: true,
         title: {
           display: true,
           text: "Doanh thu",
         },
+        suggestedMax: 50000,
       },
     },
   };

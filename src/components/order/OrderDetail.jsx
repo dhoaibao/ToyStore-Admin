@@ -8,7 +8,7 @@ import printInvoice from "../../utils/printInvoice";
 import { Printer } from "lucide-react";
 
 const OrderDetail = ({ open, setOpen, data }) => {
-  const { stepItems, currentStep, stepStatus } = useMemo(() => {
+  const { stepItems, currentStep, lastTracking, stepStatus } = useMemo(() => {
     const trackings = data?.orderTrackings || [];
     const lastTracking = trackings[trackings.length - 1];
     return {
@@ -19,6 +19,7 @@ const OrderDetail = ({ open, setOpen, data }) => {
         ) : null,
       })),
       currentStep: trackings.length - 1,
+      lastTracking,
       stepStatus: getStepStatus(lastTracking?.orderStatus.statusName),
     };
   }, [data?.orderTrackings]);
@@ -32,7 +33,10 @@ const OrderDetail = ({ open, setOpen, data }) => {
       onCancel={() => setOpen(false)}
       title={`Đơn hàng: #${data?.orderId}`}
       footer={
-        <Button onClick={handlePrintInvoice}>
+        <Button
+          disabled={lastTracking?.orderStatus?.statusName !== "delivered"}
+          onClick={handlePrintInvoice}
+        >
           <Printer strokeWidth={1} size={20} />
           In hóa đơn
         </Button>
@@ -110,7 +114,7 @@ const OrderDetail = ({ open, setOpen, data }) => {
                   className: "text-red-600 font-semibold",
                 },
               ].map((item, index) => (
-                <div key={index} className="flex space-x-1">
+                <div key={index} className="flex justify-between space-x-1">
                   <p className="font-semibold">{item.label}:</p>
                   <p className={item.className || ""}>{item.value}</p>
                 </div>

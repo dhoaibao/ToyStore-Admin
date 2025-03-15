@@ -15,6 +15,7 @@ const DynamicComponent = ({ type, options, ...restProps }) => {
   return (
     <Component
       {...restProps}
+      filterOption={true}
       options={
         type === "SELECT" || type === "AUTOCOMPLETE" ? options : undefined
       }

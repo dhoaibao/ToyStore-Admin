@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { roleService } from "../services";
 import moment from "moment";
 import { Pencil } from "lucide-react";
-import RoleForm from "../components/form/RoleForm";
+import RoleForm from "../components/role/RoleForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { getSortOrder } from "../utils";

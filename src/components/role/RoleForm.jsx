@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { Modal, Form, Input, message, Switch } from "antd";
 import { roleService, permissionService } from "../../services";
-import PermissionCollapse from "../common/PermissionCollapse";
+import PermissionCollapse from "./PermissionCollapse";
 
 const RoleForm = ({ open, setOpen, data, setFetchData }) => {
   const [form] = Form.useForm();

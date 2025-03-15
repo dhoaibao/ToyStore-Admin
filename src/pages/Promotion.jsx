@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { promotionService } from "../services";
 import moment from "moment";
 import { Pencil } from "lucide-react";
-import PromotionForm from "../components/form/PromotionForm";
+import PromotionForm from "../components/promotion/PromotionForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { getSortOrder } from "../utils";

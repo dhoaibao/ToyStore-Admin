@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { categoryService } from "../services";
 import moment from "moment";
 import { Pencil } from "lucide-react";
-import CategoryForm from "../components/form/CategoryForm";
+import CategoryForm from "../components/category/CategoryForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { getSortOrder } from "../utils";

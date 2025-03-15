@@ -2,7 +2,7 @@ import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { permissionService } from "../services";
 import { Pencil } from "lucide-react";
-import PermissionForm from "../components/form/PermissionForm";
+import PermissionForm from "../components/permission/PermissionForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { MODULES } from "../constants";

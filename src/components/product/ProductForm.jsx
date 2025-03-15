@@ -12,7 +12,7 @@ import {
   Button,
 } from "antd";
 import { History, FilePenLine } from "lucide-react";
-import PriceHistory from "../others/PriceHistory";
+import PriceHistory from "./PriceHistory";
 import PriceForm from "./PriceForm";
 import { UploadOutlined } from "@ant-design/icons";
 import { fetchImage } from "../../utils";
@@ -22,7 +22,7 @@ import {
   categoryService,
   productInformationService,
 } from "../../services";
-import DynamicComponent from "../common/DynamicComponent";
+import DynamicComponent from "./DynamicComponent";
 
 const ProductForm = ({ open, setOpen, data, setFetchData }) => {
   const [form] = Form.useForm();

@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { reviewService } from "../services";
 import moment from "moment";
 import { MessageSquareReply } from "lucide-react";
-import ReviewForm from "../components/form/ReviewForm";
+import ReviewForm from "../components/review/ReviewForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { getSortOrder } from "../utils";

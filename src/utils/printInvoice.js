@@ -2,9 +2,6 @@ import html2pdf from 'html2pdf.js';
 import moment from 'moment';
 
 const printInvoice = (data) => {
-  
-  const safePaidDate = data?.paidDate || moment(data?.createdAt).add(2, 'days').toISOString();
-
   const companyInfo = {
     name: 'ToyStore',
     address: '123 Đường ABC, Phường XYZ, Quận 1, TP. Hồ Chí Minh',
@@ -28,7 +25,7 @@ const printInvoice = (data) => {
           <p style="font-weight: 600; margin-top: 0.25rem;">Thời gian đặt hàng</p>
           <p>${moment(data?.createdAt).format('DD/MM/YYYY HH:mm')}</p>
           <p style="font-weight: 600; margin-top: 0.25rem;">Thời gian thanh toán</p>
-          <p>${moment(safePaidDate).format('DD/MM/YYYY HH:mm')}</p>
+          <p>${moment(data?.paidDate).format('DD/MM/YYYY HH:mm')}</p>
         </div>
       </div>
       <p style="margin-bottom: 0.5rem; border-bottom: 1px solid black;"></p>

@@ -31,7 +31,7 @@ const printInvoice = (data) => {
           <p>${moment(safePaidDate).format('DD/MM/YYYY HH:mm')}</p>
         </div>
       </div>
-      <p style="margin-bottom: 1.5rem; border-bottom: 1px solid black;"></p>
+      <p style="margin-bottom: 0.5rem; border-bottom: 1px solid black;"></p>
       <div style="margin-bottom: 1.5rem;">
         <p style="font-weight: 700; font-size: 1.125rem; margin-bottom: 0.5rem;">Chi tiết hóa đơn</p>
         <p>Người nhận: ${data?.orderAddress?.contactName || 'Name'}</p>

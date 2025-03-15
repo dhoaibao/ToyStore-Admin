@@ -2,7 +2,7 @@ import html2pdf from 'html2pdf.js';
 import moment from 'moment';
 
 const printInvoice = (data) => {
-  const companyInfo = {
+  const shopInfo = {
     name: 'ToyStore',
     address: '123 Đường ABC, Phường XYZ, Quận 1, TP. Hồ Chí Minh',
     phone: '(+84) 942 463 758',
@@ -15,10 +15,10 @@ const printInvoice = (data) => {
       <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
         <div>
           <h1 style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Hóa đơn</h1>
-          <p style="font-weight: 700; font-size: 1rem;">${companyInfo.name}</p>
-          <p>${companyInfo.address}</p>
-          <p>Số điện thoại: ${companyInfo.phone}</p>
-          <p>Email: ${companyInfo.email}</p>
+          <p style="font-weight: 700; font-size: 1rem;">${shopInfo.name}</p>
+          <p>${shopInfo.address}</p>
+          <p>Số điện thoại: ${shopInfo.phone}</p>
+          <p>Email: ${shopInfo.email}</p>
         </div>
         <div style="text-align: right;">
           <p style="font-weight: 600;">Mã đơn hàng: #${data?.orderId || 'XXXX'}</p>

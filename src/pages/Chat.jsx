@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Avatar, List, Input, Button, Typography } from "antd";
+import { Avatar, List, Input, Button, Typography, Image } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { Check, CheckCheck, Send } from "lucide-react";
 import moment from "moment";
@@ -87,6 +87,7 @@ const Chat = () => {
         }
         setConversations(updatedConversations);
         if (data.senderId === selectedConversation) {
+          console.log(data)
           setMessages((prev) => [
             ...prev,
             {
@@ -302,47 +303,74 @@ const Chat = () => {
           <List
             dataSource={messages}
             renderItem={(message) => (
-              <div
-                style={{
-                  justifyContent:
-                    message.senderId !== selectedConversation
-                      ? "flex-end"
-                      : "flex-start",
-                  display: "flex",
-                  marginBottom: "10px",
-                }}
-              >
+              <>
                 <div
-                  style={{
-                    maxWidth: "70%",
-                    padding: "10px",
-                    borderRadius: "10px",
-                    backgroundColor:
-                      message.senderId !== selectedConversation
-                        ? "#e6f7ff"
-                        : "#ffffff",
-                    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
-                  }}
+                  className={`flex mb-2 ${
+                    message.senderId !== selectedConversation
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
                 >
-                  <Text>{message.content}</Text>
-                  <br />
-                  <Text
-                    type="secondary"
-                    className="flex items-center space-x-1 text-xs"
-                  >
-                    <span>{message.time}</span>
-                    {message.senderId !== selectedConversation && (
-                      <span>
-                        {message.isRead ? (
-                          <CheckCheck strokeWidth={1} size={16} />
-                        ) : (
-                          <Check strokeWidth={1} size={16} />
-                        )}
-                      </span>
-                    )}
-                  </Text>
+                  {message.uploadImages && message.uploadImages.length > 0 && (
+                    <div
+                      className={`max-w-[70%] flex flex-wrap ${message.senderId !== selectedConversation ? "justify-end" : "justify-start"}`}
+                    >
+                      {message.uploadImages.map((image, idx) => (
+                        <Image
+                          key={idx}
+                          src={image.url}
+                          className="rounded-lg mb-2 flex-col"
+                          width={100}
+                          preview={true}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
+                {message.content && (
+                  <div
+                    style={{
+                      justifyContent:
+                        message.senderId !== selectedConversation
+                          ? "flex-end"
+                          : "flex-start",
+                      display: "flex",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        maxWidth: "70%",
+                        padding: "10px",
+                        borderRadius: "10px",
+                        backgroundColor:
+                          message.senderId !== selectedConversation
+                            ? "#e6f7ff"
+                            : "#ffffff",
+                        boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+                      }}
+                    >
+                      <Text>{message.content}</Text>
+                      <br />
+                      <Text
+                        type="secondary"
+                        className="flex items-center space-x-1 text-xs"
+                      >
+                        <span>{message.time}</span>
+                        {message.senderId !== selectedConversation && (
+                          <span>
+                            {message.isRead ? (
+                              <CheckCheck strokeWidth={1} size={16} />
+                            ) : (
+                              <Check strokeWidth={1} size={16} />
+                            )}
+                          </span>
+                        )}
+                      </Text>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           />
           <div ref={messagesEndRef} />

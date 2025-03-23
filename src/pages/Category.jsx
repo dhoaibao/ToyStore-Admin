@@ -1,7 +1,7 @@
 import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { categoryService } from "../services";
-import moment from "moment";
+import dayjs from "dayjs";
 import { Pencil } from "lucide-react";
 import CategoryForm from "../components/category/CategoryForm";
 import { useLocation } from "react-router-dom";
@@ -114,7 +114,7 @@ const Category = () => {
       ),
       dataIndex: "createdAt",
       align: "center",
-      render: (createdAt) => moment(createdAt).format("DD/MM/YYYY"),
+      render: (createdAt) => dayjs(createdAt).format("DD/MM/YYYY"),
       showSorterTooltip: {
         target: "sorter-icon",
       },
@@ -129,7 +129,7 @@ const Category = () => {
       ),
       dataIndex: "updatedAt",
       align: "center",
-      render: (updatedAt) => moment(updatedAt).format("DD/MM/YYYY"),
+      render: (updatedAt) => dayjs(updatedAt).format("DD/MM/YYYY"),
       showSorterTooltip: {
         target: "sorter-icon",
       },

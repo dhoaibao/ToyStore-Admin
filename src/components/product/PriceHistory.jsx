@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Modal, Table } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const PriceHistory = ({ open, setOpen, data }) => {
   return (
@@ -30,7 +30,7 @@ const PriceHistory = ({ open, setOpen, data }) => {
             dataIndex: "startDate",
             key: "startDate",
             align: "center",
-            render: (time) => moment(time).format("DD/MM/YYYY HH:mm"),
+            render: (time) => dayjs(time).format("DD/MM/YYYY HH:mm"),
           },
           {
             title: "Đến ngày",
@@ -38,7 +38,7 @@ const PriceHistory = ({ open, setOpen, data }) => {
             key: "endDate",
             align: "center",
             render: (time) =>
-              time ? moment(time).format("DD/MM/YYYY HH:mm") : "Hiện tại",
+              time ? dayjs(time).format("DD/MM/YYYY HH:mm") : "Hiện tại",
           },
         ]}
         dataSource={data}

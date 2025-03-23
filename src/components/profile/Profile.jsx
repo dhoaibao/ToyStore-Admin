@@ -14,9 +14,8 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import moment from "moment";
-import { generateAvatar } from "../../utils";
 import dayjs from "dayjs";
+import { generateAvatar } from "../../utils";
 import { updateProfile } from "../../redux/thunks/userThunk";
 
 const Profile = ({ open, setOpen }) => {
@@ -154,7 +153,7 @@ const Profile = ({ open, setOpen }) => {
           fullName: user?.fullName,
           email: user?.email,
           phone: user?.phone,
-          birthday: user?.birthday ? moment(user?.birthday) : null,
+          birthday: user?.birthday ? dayjs(user?.birthday) : null,
           gender: user?.gender?.toString(),
         }}
         onFinish={handleUpdate}

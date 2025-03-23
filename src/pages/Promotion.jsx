@@ -1,7 +1,7 @@
 import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { promotionService } from "../services";
-import moment from "moment";
+import dayjs from "dayjs";
 import { Pencil } from "lucide-react";
 import PromotionForm from "../components/promotion/PromotionForm";
 import { useLocation } from "react-router-dom";
@@ -124,7 +124,7 @@ const Promotion = () => {
       ),
       dataIndex: "startDate",
       align: "center",
-      render: (startDate) => moment(startDate).format("DD/MM/YYYY"),
+      render: (startDate) => dayjs(startDate).format("DD/MM/YYYY"),
       showSorterTooltip: {
         target: "sorter-icon",
       },
@@ -139,7 +139,7 @@ const Promotion = () => {
       ),
       dataIndex: "endDate",
       align: "center",
-      render: (endDate) => moment(endDate).format("DD/MM/YYYY"),
+      render: (endDate) => dayjs(endDate).format("DD/MM/YYYY"),
       showSorterTooltip: {
         target: "sorter-icon",
       },

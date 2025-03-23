@@ -1,7 +1,7 @@
 import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { voucherService } from "../services";
-import moment from "moment";
+import dayjs from "dayjs";
 import { Pencil } from "lucide-react";
 import VoucherForm from "../components/voucher/VoucherForm";
 import { useLocation } from "react-router-dom";
@@ -131,7 +131,7 @@ const Voucher = () => {
       ),
       dataIndex: "startDate",
       align: "center",
-      render: (startDate) => moment(startDate).format("DD/MM/YYYY"),
+      render: (startDate) => dayjs(startDate).format("DD/MM/YYYY"),
       showSorterTooltip: {
         target: "sorter-icon",
       },
@@ -146,7 +146,7 @@ const Voucher = () => {
       ),
       dataIndex: "endDate",
       align: "center",
-      render: (endDate) => moment(endDate).format("DD/MM/YYYY"),
+      render: (endDate) => dayjs(endDate).format("DD/MM/YYYY"),
       showSorterTooltip: {
         target: "sorter-icon",
       },

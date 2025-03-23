@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Modal, Avatar, Steps, Button } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 import { PAYMENT_METHOD } from "../../constants";
 import { generateStepItems, getStepStatus } from "../../utils";
 import { useMemo } from "react";
@@ -82,7 +82,7 @@ const OrderDetail = ({ open, setOpen, data }) => {
               {[
                 {
                   label: "Thời gian đặt hàng",
-                  value: moment(data?.createdAt).format("DD/MM/YYYY HH:mm"),
+                  value: dayjs(data?.createdAt).format("DD/MM/YYYY HH:mm"),
                 },
                 {
                   label: "Phương thức thanh toán",

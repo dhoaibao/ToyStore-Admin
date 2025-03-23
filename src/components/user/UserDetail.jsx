@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Modal, Descriptions, Tag, Avatar } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 import { generateAvatar } from "../../utils";
 
 const UserDetail = ({ open, setOpen, data }) => {
@@ -69,7 +69,7 @@ const UserDetail = ({ open, setOpen, data }) => {
       key: "8",
       label: "Ngày sinh",
       span: "filled",
-      children: moment(data?.birthday).format("DD/MM/YYYY"),
+      children: dayjs(data?.birthday).format("DD/MM/YYYY"),
     },
   ];
 

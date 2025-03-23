@@ -1,5 +1,5 @@
 import html2pdf from 'html2pdf.js';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const printInvoice = (data) => {
   const shopInfo = {
@@ -23,9 +23,9 @@ const printInvoice = (data) => {
         <div style="text-align: right;">
           <p style="font-weight: 600;">Mã đơn hàng: #${data?.orderId || 'XXXX'}</p>
           <p style="font-weight: 600; margin-top: 0.25rem;">Thời gian đặt hàng</p>
-          <p>${moment(data?.createdAt).format('DD/MM/YYYY HH:mm')}</p>
+          <p>${dayjs(data?.createdAt).format('DD/MM/YYYY HH:mm')}</p>
           <p style="font-weight: 600; margin-top: 0.25rem;">Thời gian thanh toán</p>
-          <p>${moment(data?.paidDate).format('DD/MM/YYYY HH:mm')}</p>
+          <p>${dayjs(data?.paidDate).format('DD/MM/YYYY HH:mm')}</p>
         </div>
       </div>
       <p style="margin-bottom: 0.5rem; border-bottom: 1px solid black;"></p>
@@ -72,7 +72,7 @@ const printInvoice = (data) => {
 
   const opt = {
     margin: 0,
-    filename: `HoaDon_${moment(data?.createdAt).format('DDMMYYYY_HHmm')}.pdf`,
+    filename: `HoaDon_${dayjs(data?.createdAt).format('DDMMYYYY_HHmm')}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },

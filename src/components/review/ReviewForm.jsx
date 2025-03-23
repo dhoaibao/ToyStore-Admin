@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { reviewService } from "../../services";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 
 const ReviewForm = ({ open, setOpen, data, setFetchData }) => {
@@ -48,7 +48,7 @@ const ReviewForm = ({ open, setOpen, data, setFetchData }) => {
       <div className="flex justify-between">
         <p className="font-medium">Người trả lời: {item?.user?.fullName}</p>
         <p className="text-gray-600 text-xs">
-          {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
+          {dayjs(item.createdAt).format("DD/MM/YYYY HH:mm")}
         </p>
       </div>
     ),
@@ -144,7 +144,7 @@ const ReviewForm = ({ open, setOpen, data, setFetchData }) => {
           </p>
           <p>
             <span className="font-medium">Ngày đánh giá: </span>
-            {moment(data?.createdAt).format("DD/MM/YYYY HH:mm")}
+            {dayjs(data?.createdAt).format("DD/MM/YYYY HH:mm")}
           </p>
           <p className="font-medium">Đánh giá: </p>
           <p>

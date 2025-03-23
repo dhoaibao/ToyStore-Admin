@@ -1,7 +1,7 @@
 import { Button, Rate, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { reviewService } from "../services";
-import moment from "moment";
+import dayjs from "dayjs";
 import { MessageSquareReply } from "lucide-react";
 import ReviewForm from "../components/review/ReviewForm";
 import { useLocation } from "react-router-dom";
@@ -124,7 +124,7 @@ const Review = () => {
       ),
       dataIndex: "createdAt",
       align: "center",
-      render: (createdAt) => moment(createdAt).format("DD/MM/YYYY"),
+      render: (createdAt) => dayjs(createdAt).format("DD/MM/YYYY"),
       showSorterTooltip: {
         target: "sorter-icon",
       },

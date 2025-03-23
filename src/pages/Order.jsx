@@ -1,7 +1,7 @@
 import { Button, Tag } from "antd";
 import { useState, useEffect, useMemo } from "react";
 import { orderService } from "../services";
-import moment from "moment";
+import dayjs from "dayjs";
 import { Eye, Pencil } from "lucide-react";
 import OrderForm from "../components/order/OrderForm";
 import OrderDetail from "../components/order/OrderDetail";
@@ -102,7 +102,7 @@ const Order = () => {
       ),
       dataIndex: "createdAt",
       align: "center",
-      render: (createdAt) => moment(createdAt).format("DD/MM/YYYY"),
+      render: (createdAt) => dayjs(createdAt).format("DD/MM/YYYY"),
       showSorterTooltip: {
         target: "sorter-icon",
       },

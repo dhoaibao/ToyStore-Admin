@@ -10,6 +10,7 @@ import "dayjs/locale/vi";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import viVN from "antd/locale/vi_VN";
+import relativeTime from "dayjs/plugin/relativeTime";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
@@ -18,6 +19,7 @@ const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
 dayjs.locale("vi");
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(relativeTime);
 dayjs.tz.setDefault("Asia/Ho_Chi_Minh");
 
 const ScrollToTop = () => {

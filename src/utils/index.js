@@ -1,5 +1,5 @@
 import CryptoJS from "crypto-js";
-import moment from "moment";
+import dayjs from "dayjs";
 import { ICON_MAP, ORDER_STATUS } from "../constants";
 
 export const generateAvatar = (identifier, name) => {
@@ -70,7 +70,7 @@ export const generateStepItems = (orderTrackings) => {
       title: status.label,
       icon: ICON_MAP[key],
       description: tracking
-        ? moment(tracking.time).format("DD/MM/YYYY HH:mm")
+        ? dayjs(tracking.time).format("DD/MM/YYYY HH:mm")
         : null,
     };
   });

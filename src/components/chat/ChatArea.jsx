@@ -355,9 +355,9 @@ const ChatArea = ({ selectedConversation, socket, setConversations }) => {
               placeholder="Nhập tin nhắn..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onPressEnter={sendMessage}
+              onPressEnter={() => sendMessage(selectedConversation)}
             />
-            <Button type="primary" onClick={sendMessage} className="px-3">
+            <Button type="primary" onClick={() => sendMessage(selectedConversation)} className="px-3">
               <Send strokeWidth={1} size={18} />
             </Button>
           </div>

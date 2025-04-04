@@ -14,6 +14,9 @@ import { UploadOutlined } from "@ant-design/icons";
 import { fetchImage } from "../../utils";
 import { promotionService } from "../../services";
 import dayjs from "dayjs";
+import SearchProduct from "./SearchProduct";
+import PromotionPeriod from "./PromotionPeriod";
+import { Button } from "antd/es/radio";
 
 const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
   const [form] = Form.useForm();
@@ -21,18 +24,24 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
   const [loading, setLoading] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
   const [discountType, setDiscountType] = useState("fixed_amount");
+  const [productIds, setProductIds] = useState([]);
+  const [selectedPromotionPeriod, setSelectedPromotionPeriod] = useState(null);
+  const [openPeriod, setOpenPeriod] = useState(false);
 
   useEffect(() => {
     const loadImage = async () => {
       if (data) {
         setLoadingImage(true);
+
+        setSelectedPromotionPeriod(data?.promotionPeriods?.at(-1) || null);
+
         form.setFieldsValue(data);
         setDiscountType(data.discountType);
 
         if (data.promotionThumbnail?.url) {
           const file = await fetchImage(
             data.promotionThumbnail.url,
-            `promotion-thumbnail-${data.promotionThumbnailId}`
+            `promotion-thumbnail-${data.promotionThumbnailId}`,
           );
           if (file) {
             setFileList([
@@ -59,13 +68,36 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
     if (open) loadImage();
   }, [open, data, form]);
 
+  useEffect(() => {
+    if (selectedPromotionPeriod) {
+      form.setFieldsValue({
+        discountType: selectedPromotionPeriod.discountType,
+        discountValue: selectedPromotionPeriod.discountValue,
+        startDate: selectedPromotionPeriod.startDate,
+        endDate: selectedPromotionPeriod.endDate,
+      });
+      setDiscountType(selectedPromotionPeriod.discountType);
+      setProductIds(
+        selectedPromotionPeriod.products.map(({ productId }) => productId),
+      );
+    } else {
+      form.setFieldsValue({
+        discountType: "",
+        discountValue: "",
+        startDate: "",
+        endDate: "",
+      });
+      setDiscountType("fixed_amount");
+    }
+  }, [selectedPromotionPeriod, form, open]);
+
   const handleUploadChange = ({ fileList }) => {
     setFileList(fileList);
   };
 
   const handleRemove = (file) => {
     setFileList((prevFileList) =>
-      prevFileList.filter((item) => item.uid !== file.uid)
+      prevFileList.filter((item) => item.uid !== file.uid),
     );
   };
 
@@ -73,6 +105,8 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
     setOpen(false);
     form.resetFields();
     setFileList([]);
+    setProductIds([]);
+    setSelectedPromotionPeriod(null);
   };
 
   const onFinish = async (values) => {
@@ -92,6 +126,19 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
         formData.append("file", fileList[0].originFileObj);
       }
     }
+
+    productIds.forEach((id) => {
+      formData.append("productIds", id);
+    });
+
+    if (selectedPromotionPeriod) {
+      formData.append(
+        "promotionPeriodId",
+        selectedPromotionPeriod.promotionPeriodId,
+      );
+    }
+
+    console.log(formData);
 
     try {
       if (data?.promotionId) {
@@ -130,52 +177,84 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
       centered
       okText="Lưu"
       cancelText="Hủy"
+      width={1000}
+      className="min-h-[90vh]"
     >
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Form.Item
-          label="Tên khuyến mãi:"
-          name="promotionName"
-          rules={[{ required: true, message: "Vui lòng nhập tên khuyến mãi" }]}
-        >
-          <Input />
-        </Form.Item>
-        <div className="flex flex-row space-x-2">
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        className="flex flex-row space-x-8"
+      >
+        <div className="w-1/2">
           <Form.Item
-            className="w-1/2"
-            label="Hình ảnh:"
-            name="promotionThumbnail"
+            label="Tên khuyến mãi:"
+            name="promotionName"
             rules={[
-              {
-                required: fileList.length === 0,
-                message: "Vui lòng chọn hình ảnh",
-              },
+              { required: true, message: "Vui lòng nhập tên khuyến mãi" },
             ]}
           >
-            <Upload
-              fileList={fileList}
-              listType="picture-card"
-              maxCount={1}
-              accept="image/*"
-              beforeUpload={() => false}
-              onChange={handleUploadChange}
-              onRemove={handleRemove}
-            >
-              {fileList.length < 1 && (
-                <div className="flex-col">
-                  <UploadOutlined /> <p>Tải lên</p>
-                </div>
-              )}
-            </Upload>
+            <Input placeholder="Nhập tên khuyến mãi" />
           </Form.Item>
-          <div>
+          <div className="flex flex-row space-x-2">
+            <Form.Item
+              className="w-1/3"
+              label="Hình ảnh:"
+              name="promotionThumbnail"
+              rules={[
+                {
+                  required: fileList.length === 0,
+                  message: "Vui lòng chọn hình ảnh",
+                },
+              ]}
+            >
+              <Upload
+                fileList={fileList}
+                listType="picture-card"
+                maxCount={1}
+                accept="image/*"
+                beforeUpload={() => false}
+                onChange={handleUploadChange}
+                onRemove={handleRemove}
+              >
+                {fileList.length < 1 && (
+                  <div className="flex-col">
+                    <UploadOutlined /> <p>Tải lên</p>
+                  </div>
+                )}
+              </Upload>
+            </Form.Item>
+            <Form.Item
+              label="Mô tả:"
+              className="w-2/3"
+              name="description"
+              rules={[
+                { required: true, message: "Vui lòng nhập mô tả khuyến mãi" },
+              ]}
+            >
+              <Input.TextArea
+                placeholder="Nhập mô tả"
+                autoSize={{ minRows: 5, maxRows: 5 }}
+              />
+            </Form.Item>
+          </div>
+
+          <Form.Item>
+            <Button onClick={() => setOpenPeriod(true)}>
+              Chọn đợt giảm giá
+            </Button>
+          </Form.Item>
+          <div className="flex flex-row space-x-2">
             <Form.Item
               label="Loại khuyến mãi:"
+              className="w-1/2"
               name="discountType"
               rules={[
                 { required: true, message: "Vui lòng chọn loại khuyến mãi" },
               ]}
             >
               <Select
+                placeholder="Chọn loại khuyến mãi"
                 onChange={(value) => setDiscountType(value)}
                 options={[
                   { value: "fixed_amount", label: "Giảm giá cố định" },
@@ -185,12 +264,17 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
             </Form.Item>
             <Form.Item
               label="Giá trị:"
+              className="w-1/2"
               name="discountValue"
               rules={[
-                { required: true, message: "Vui lòng nhập giá trị khuyến mãi" },
+                {
+                  required: true,
+                  message: "Vui lòng nhập giá trị khuyến mãi",
+                },
               ]}
             >
               <InputNumber
+                placeholder="Nhập giá trị khuyến mãi"
                 addonAfter={discountType === "percentage" ? "%" : "VNĐ"}
                 min={1}
                 max={discountType === "percentage" ? 100 : 1000000000}
@@ -208,55 +292,70 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
               />
             </Form.Item>
           </div>
+          <div className="flex flex-row space-x-2">
+            <Form.Item
+              className="w-1/2"
+              label="Ngày bắt đầu:"
+              name="startDate"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn thời gian bắt đầu",
+                },
+              ]}
+              getValueProps={(value) => ({
+                value: value && dayjs(value),
+              })}
+              normalize={(value) => value && value.tz().format("YYYY-MM-DD")}
+            >
+              <DatePicker
+                format="DD/MM/YYYY"
+                placeholder="Chọn ngày bắt đầu"
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+            <Form.Item
+              className="w-1/2"
+              label="Ngày kết thúc:"
+              name="endDate"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn thời gian kết thúc",
+                },
+              ]}
+              getValueProps={(value) => ({
+                value: value && dayjs(value),
+              })}
+              normalize={(value) => value && value.tz().format("YYYY-MM-DD")}
+            >
+              <DatePicker
+                format="DD/MM/YYYY"
+                placeholder="Chọn ngày kết thúc"
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+          </div>
         </div>
         <Form.Item
-          label="Mô tả:"
-          name="description"
-          rules={[
-            { required: true, message: "Vui lòng nhập mô tả khuyến mãi" },
-          ]}
+          className="w-1/2"
+          label="Chọn sản phẩm áp dụng khuyến mãi:"
+          name="products"
         >
-          <Input.TextArea />
+          <SearchProduct
+            productIds={productIds}
+            setProductIds={setProductIds}
+            productData={selectedPromotionPeriod?.products}
+          />
         </Form.Item>
-        <div className="flex flex-row space-x-2">
-          <Form.Item
-            className="w-1/2"
-            label="Ngày bắt đầu:"
-            name="startDate"
-            rules={[
-              { required: true, message: "Vui lòng chọn thời gian bắt đầu" },
-            ]}
-            getValueProps={(value) => ({
-              value: value && dayjs(value),
-            })}
-            normalize={(value) => value && value.tz().format("YYYY-MM-DD")}
-          >
-            <DatePicker
-              format="DD/MM/YYYY"
-              placeholder="Chọn ngày bắt đầu"
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-          <Form.Item
-            className="w-1/2"
-            label="Ngày kết thúc:"
-            name="endDate"
-            rules={[
-              { required: true, message: "Vui lòng chọn thời gian kết thúc" },
-            ]}
-            getValueProps={(value) => ({
-              value: value && dayjs(value),
-            })}
-            normalize={(value) => value && value.tz().format("YYYY-MM-DD")}
-          >
-            <DatePicker
-              format="DD/MM/YYYY"
-              placeholder="Chọn ngày kết thúc"
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-        </div>
       </Form>
+      <PromotionPeriod
+        open={openPeriod}
+        setOpen={setOpenPeriod}
+        selectedPromotionPeriod={selectedPromotionPeriod}
+        setSelectedPromotionPeriod={setSelectedPromotionPeriod}
+        promotionPeriods={data?.promotionPeriods}
+      />
     </Modal>
   );
 };

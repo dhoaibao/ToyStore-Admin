@@ -65,7 +65,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
         form.setFieldsValue(initialValues);
         setNewPrice(data.price);
         const startDate = data.prices.find(
-          (item) => item.price === data.price
+          (item) => item.price === data.price,
         )?.startDate;
         setStartValidPrice(startDate);
 
@@ -75,12 +75,12 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
               if (image.url) {
                 const result = await fetchImage(
                   image.url,
-                  `product-image-${index}`
+                  `product-image-${index}`,
                 );
                 return { file: result, uploadImageId: image.uploadImageId };
               }
               return null;
-            })
+            }),
           );
 
           const fileList = files
@@ -112,7 +112,7 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
 
   const handleRemove = (file) => {
     setFileList((prevFileList) =>
-      prevFileList.filter((item) => item.uid !== file.uid)
+      prevFileList.filter((item) => item.uid !== file.uid),
     );
   };
 

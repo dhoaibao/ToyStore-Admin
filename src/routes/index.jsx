@@ -11,7 +11,7 @@ import User from "../pages/User";
 import Role from "../pages/Role";
 import Permission from "../pages/Permission";
 import Review from "../pages/Review";
-import Chat from "../pages/Chat";
+import ChatPage from "../pages/ChatPage";
 
 const routes = [
   {
@@ -82,7 +82,7 @@ const routes = [
   {
     id: "chat",
     path: "/chats",
-    element: <Chat />,
+    element: <ChatPage />,
   },
 ];
 

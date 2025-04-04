@@ -16,11 +16,13 @@ import { Send, ImageUp } from "lucide-react";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { useSocket } from "../../context/SocketContext";
 
 const { Text } = Typography;
 
-const ChatArea = ({ selectedConversation, socket, setConversations }) => {
+const ChatArea = ({ selectedConversation }) => {
   const { userId, user } = useSelector((state) => state.user);
+  const socket = useSocket();
 
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -55,20 +57,6 @@ const ChatArea = ({ selectedConversation, socket, setConversations }) => {
           setPage(result.pagination.page);
           setHasMore(result.pagination.page < result.pagination.totalPages);
           setMessages((prev) => [...result.data, ...prev]);
-          setConversations((prevConversations) =>
-            prevConversations.map((conversation) =>
-              conversation.sender.senderId === selectedConversation &&
-              conversation.sender.senderId !== userId
-                ? {
-                    ...conversation,
-                    lastMessage: {
-                      ...conversation.lastMessage,
-                      isRead: true,
-                    },
-                  }
-                : conversation,
-            ),
-          );
         }
         setLoading(false);
       } catch (error) {
@@ -77,7 +65,7 @@ const ChatArea = ({ selectedConversation, socket, setConversations }) => {
       }
     };
 
-    fetchMessages();
+    if (selectedConversation) fetchMessages();
   }, [selectedConversation, page]);
 
   useEffect(() => {
@@ -111,6 +99,10 @@ const ChatArea = ({ selectedConversation, socket, setConversations }) => {
       socket.off("newMessage");
     };
   }, [socket, userId]);
+
+  useEffect(() => {
+    setMessages([]);
+  }, [selectedConversation]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -163,8 +155,10 @@ const ChatArea = ({ selectedConversation, socket, setConversations }) => {
         buffer: file.originFileObj,
       })),
     };
+    
+    console.log(newMsg)
 
-    socket.emit("replyMessage", newMsg);
+    socket.emit("sendMessageByStore", newMsg);
 
     setMessages([
       ...messages,
@@ -180,22 +174,6 @@ const ChatArea = ({ selectedConversation, socket, setConversations }) => {
     setNewMessage("");
     setFileList([]);
     scrollToBottom();
-
-    setConversations((prev) => {
-      const updatedConversations = prev.map((item) =>
-        item.sender.senderId === senderId
-          ? {
-              ...item,
-              lastMessage: {
-                content: newMsg.content,
-                time: newMsg.time,
-                isRead: true,
-              },
-            }
-          : item,
-      );
-      return updatedConversations;
-    });
   };
 
   // Handle file upload changes
@@ -357,7 +335,11 @@ const ChatArea = ({ selectedConversation, socket, setConversations }) => {
               onChange={(e) => setNewMessage(e.target.value)}
               onPressEnter={() => sendMessage(selectedConversation)}
             />
-            <Button type="primary" onClick={() => sendMessage(selectedConversation)} className="px-3">
+            <Button
+              type="primary"
+              onClick={() => sendMessage(selectedConversation)}
+              className="px-3"
+            >
               <Send strokeWidth={1} size={18} />
             </Button>
           </div>
@@ -377,8 +359,6 @@ const ChatArea = ({ selectedConversation, socket, setConversations }) => {
 
 ChatArea.propTypes = {
   selectedConversation: PropTypes.number,
-  socket: PropTypes.any,
-  setConversations: PropTypes.func.isRequired,
 };
 
 export default ChatArea;

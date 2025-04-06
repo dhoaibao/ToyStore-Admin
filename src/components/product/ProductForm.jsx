@@ -310,6 +310,22 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                   </Button>
                 </Form.Item>
               )}
+              <Form.Item
+                className="w-1/2"
+                label="Trạng thái:"
+                name="isActive"
+                valuePropName="checked"
+                initialValue={true}
+                rules={[
+                  { required: true, message: "Vui lòng chọn trạng thái" },
+                ]}
+              >
+                <Switch
+                  checkedChildren="ACTIVE"
+                  unCheckedChildren="INACTIVE"
+                  defaultChecked
+                />
+              </Form.Item>
             </div>
             <div className="flex flex-row space-x-2">
               <Form.Item
@@ -363,18 +379,22 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
               </Form.Item>
               <Form.Item
                 className="w-1/2"
-                label="Trạng thái:"
-                name="isActive"
-                valuePropName="checked"
-                initialValue={true}
+                label="Thuế giá trị gia tăng (VAT):"
+                name="vat"
+                initialValue={10}
                 rules={[
-                  { required: true, message: "Vui lòng chọn trạng thái" },
+                  {
+                    required: true,
+                    message: "Vui lòng nhập giá trị VAT",
+                  },
                 ]}
               >
-                <Switch
-                  checkedChildren="ACTIVE"
-                  unCheckedChildren="INACTIVE"
-                  defaultChecked
+                <InputNumber
+                  className="w-full"
+                  placeholder="Nhập giá trị VAT"
+                  min={1}
+                  max={100}
+                  addonAfter="%"
                 />
               </Form.Item>
             </div>

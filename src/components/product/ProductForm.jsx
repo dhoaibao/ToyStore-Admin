@@ -242,7 +242,14 @@ const ProductForm = ({ open, setOpen, data, setFetchData }) => {
                 listType="picture-card"
                 maxCount={10}
                 accept="image/*"
-                beforeUpload={() => false}
+                beforeUpload={(file) => {
+                  const isLessThan10MB = file.size / 1024 / 1024 < 10;
+                  if (!isLessThan10MB) {
+                    message.error("Dung lượng file không được vượt quá 10MB!");
+                    return Upload.LIST_IGNORE;
+                  }
+                  return false;
+                }}
                 onChange={handleUploadChange}
                 onRemove={handleRemove}
                 multiple

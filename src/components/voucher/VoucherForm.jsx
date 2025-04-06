@@ -85,7 +85,7 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
             name="voucherCode"
             rules={[{ required: true, message: "Vui lòng nhập mã giảm giá" }]}
           >
-            <Input />
+            <Input placeholder="Nhập mã giảm giá" />
           </Form.Item>
           <Form.Item
             className="w-1/2"
@@ -93,19 +93,22 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
             name="quantity"
             rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
           >
-            <InputNumber className="w-full" min={1} />
+            <InputNumber
+              placeholder="Nhập số lượng"
+              className="w-full"
+              min={1}
+            />
           </Form.Item>
         </div>
         <div className="flex flex-row space-x-2">
           <Form.Item
             className="w-1/2"
-            label="Loại khuyến mãi:"
+            label="Loại giảm giá:"
             name="discountType"
-            rules={[
-              { required: true, message: "Vui lòng chọn loại khuyến mãi" },
-            ]}
+            rules={[{ required: true, message: "Vui lòng chọn loại giảm giá" }]}
           >
             <Select
+              placeholder="Chọn loại giảm giá"
               onChange={(value) => setDiscountType(value)}
               options={[
                 { value: "fixed_amount", label: "Giảm giá cố định" },
@@ -118,10 +121,11 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
             label="Giá trị:"
             name="discountValue"
             rules={[
-              { required: true, message: "Vui lòng nhập giá trị khuyến mãi" },
+              { required: true, message: "Vui lòng nhập giá trị giảm giá" },
             ]}
           >
             <InputNumber
+              placeholder="Nhập giá trị giảm giá"
               addonAfter={discountType === "percentage" ? "%" : "VNĐ"}
               min={1}
               max={discountType === "percentage" ? 100 : 1000000000}
@@ -142,11 +146,12 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
         <div className="flex flex-row space-x-2">
           <Form.Item
             className="w-1/2"
-            label="Đơn hàng tối thiểu:"
+            label="Giá đơn hàng tối thiểu:"
             name="minOrderPrice"
             rules={[{ required: true, message: "Vui lòng nhập mã giảm giá" }]}
           >
             <InputNumber
+              placeholder="Nhập giá tối thiểu"
               addonAfter="VNĐ"
               min={0}
               formatter={(value) =>
@@ -167,6 +172,7 @@ const VoucherForm = ({ open, setOpen, data, setFetchData }) => {
             ]}
           >
             <InputNumber
+              placeholder="Nhập giá giảm tối đa"
               addonAfter="VNĐ"
               min={0}
               formatter={(value) =>

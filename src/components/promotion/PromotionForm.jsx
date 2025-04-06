@@ -246,15 +246,15 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
           </Form.Item>
           <div className="flex flex-row space-x-2">
             <Form.Item
-              label="Loại khuyến mãi:"
+              label="Loại giảm giá:"
               className="w-1/2"
               name="discountType"
               rules={[
-                { required: true, message: "Vui lòng chọn loại khuyến mãi" },
+                { required: true, message: "Vui lòng chọn loại giảm giá" },
               ]}
             >
               <Select
-                placeholder="Chọn loại khuyến mãi"
+                placeholder="Chọn loại giảm giá"
                 onChange={(value) => setDiscountType(value)}
                 options={[
                   { value: "fixed_amount", label: "Giảm giá cố định" },
@@ -269,12 +269,12 @@ const PromotionForm = ({ open, setOpen, data, setFetchData }) => {
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập giá trị khuyến mãi",
+                  message: "Vui lòng nhập giá trị giảm giá",
                 },
               ]}
             >
               <InputNumber
-                placeholder="Nhập giá trị khuyến mãi"
+                placeholder="Nhập giá trị giảm giá"
                 addonAfter={discountType === "percentage" ? "%" : "VNĐ"}
                 min={1}
                 max={discountType === "percentage" ? 100 : 1000000000}

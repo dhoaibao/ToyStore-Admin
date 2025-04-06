@@ -20,7 +20,7 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
         if (data.categoryThumbnail?.url) {
           const file = await fetchImage(
             data.categoryThumbnail.url,
-            `category-thumbnail-${data.categoryThumbnailId}`
+            `category-thumbnail-${data.categoryThumbnailId}`,
           );
           if (file) {
             setFileList([
@@ -53,7 +53,7 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
 
   const handleRemove = (file) => {
     setFileList((prevFileList) =>
-      prevFileList.filter((item) => item.uid !== file.uid)
+      prevFileList.filter((item) => item.uid !== file.uid),
     );
   };
 
@@ -127,7 +127,7 @@ const CategoryForm = ({ open, setOpen, data, setFetchData }) => {
           name="categoryName"
           rules={[{ required: true, message: "Vui lòng nhập tên danh mục" }]}
         >
-          <Input />
+          <Input placeholder="Nhập tên danh mục" />
         </Form.Item>
 
         <Form.Item

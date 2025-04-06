@@ -73,14 +73,17 @@ const BrandForm = ({ open, setOpen, data, setFetchData }) => {
           name="brandName"
           rules={[{ required: true, message: "Vui lòng nhập tên thương hiệu" }]}
         >
-          <Input />
+          <Input placeholder="Nhập tên thương hiệu" />
         </Form.Item>
         <Form.Item
           label="Mô tả:"
           name="brandDesc"
           rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
         >
-          <Input.TextArea autoSize={{ minRows: 5, maxRows: 5 }} />
+          <Input.TextArea
+            placeholder="Nhập mô tả"
+            autoSize={{ minRows: 5, maxRows: 5 }}
+          />
         </Form.Item>
         <Form.Item
           label="Trạng thái:"

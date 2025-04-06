@@ -74,7 +74,7 @@ const PermissionForm = ({ open, setOpen, data, setFetchData }) => {
           name="permissionName"
           rules={[{ required: true, message: "Vui lòng nhập tên quyền hạn" }]}
         >
-          <Input />
+          <Input placeholder="Nhập tên quyền hạn" />
         </Form.Item>
         <div className="flex flex-row space-x-2">
           <Form.Item
@@ -84,6 +84,7 @@ const PermissionForm = ({ open, setOpen, data, setFetchData }) => {
             rules={[{ required: true, message: "Vui lòng nhập module" }]}
           >
             <Select
+              placeholder="Chọn module"
               options={MODULES.map((module) => ({
                 label: module,
                 value: module,
@@ -96,7 +97,7 @@ const PermissionForm = ({ open, setOpen, data, setFetchData }) => {
             name="method"
             rules={[{ required: true, message: "Vui lòng chọn phương thức" }]}
           >
-            <Select>
+            <Select placeholder="Chọn phương thức">
               <Select.Option value="GET">GET</Select.Option>
               <Select.Option value="POST">POST</Select.Option>
               <Select.Option value="PUT">PUT</Select.Option>
@@ -109,7 +110,7 @@ const PermissionForm = ({ open, setOpen, data, setFetchData }) => {
           name="apiPath"
           rules={[{ required: true, message: "Vui lòng nhập đường dẫn API" }]}
         >
-          <Input />
+          <Input placeholder="Nhập đường dẫn API" />
         </Form.Item>
       </Form>
     </Modal>

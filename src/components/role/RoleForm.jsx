@@ -89,14 +89,14 @@ const RoleForm = ({ open, setOpen, data, setFetchData }) => {
               name="roleName"
               rules={[{ required: true, message: "Vui lòng nhập tên vai trò" }]}
             >
-              <Input />
+              <Input placeholder="Nhập tên vai trò" />
             </Form.Item>
             <Form.Item
               label="Mô tả:"
               name="roleDesc"
               rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
             >
-              <Input.TextArea autoSize={{ minRows: 5, maxRows: 5 }} />
+              <Input.TextArea placeholder="Nhập mô tả" autoSize={{ minRows: 5, maxRows: 5 }} />
             </Form.Item>
             <Form.Item
               label="Trạng thái:"

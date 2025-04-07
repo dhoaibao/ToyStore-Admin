@@ -105,7 +105,7 @@ const Sidebar = () => {
     <div className="bg-primary text-white h-full p-4 flex flex-col">
       <div className="sticky top-0 pt-4 z-10 bg-primary">
         <div className="flex justify-center bg-white rounded-xl">
-          <img src="/public/logo(150x50).png" alt="Logo" className="h-12" />
+          <img src="/logo(150x50).png" alt="Logo" className="h-12" />
         </div>
         <Divider className="bg-white" />
       </div>

@@ -4,7 +4,7 @@ const AuthLayout = ({ children }) => {
   return (
     <div
       className="flex items-center container justify-center bg-gray-200 min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/public/login_bg.png')" }}
+      style={{ backgroundImage: "url('/login_bg.png')" }}
     >
       {children}
     </div>

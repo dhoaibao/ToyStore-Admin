@@ -42,7 +42,7 @@ const Login = () => {
         <img src="/login_illustration.jpg" alt="login" />
       </div>
       <div className="flex flex-col items-center justify-center w-1/2">
-        <p className="font-semibold text-2xl mb-2">Đăng nhập</p>
+        <p className="font-semibold text-2xl mb-2">Đăng nhậ</p>
         <Form
           layout="vertical"
           form={loginForm}

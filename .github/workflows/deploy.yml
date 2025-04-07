@@ -26,5 +26,4 @@ jobs:
             bun install
             npm run build
             cp -r dist/* /var/www/toystore-admin
-            sudo systemctl reload nginx
           EOF

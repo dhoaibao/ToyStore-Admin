@@ -1,0 +1,29 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Lấy code mới
+        uses: actions/checkout@v3
+
+      - name: Thiết lập SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy lên VM
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            cd ~/ToyStore/ToyStore-Admin
+            git pull origin main
+            bun install
+            npm run build
+            cp -r dist/* /var/www/toystore-admin
+          EOF

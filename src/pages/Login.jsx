@@ -39,7 +39,7 @@ const Login = () => {
   return (
     <div className="flex items-center justify-between w-3/5 py-14 bg-white p-4 rounded-xl">
       <div className="w-1/2">
-        <img src="/src/assets/login_illustration.jpg" alt="login" />
+        <img src="/login_illustration.jpg" alt="login" />
       </div>
       <div className="flex flex-col items-center justify-center w-1/2">
         <p className="font-semibold text-2xl mb-2">Đăng nhập</p>

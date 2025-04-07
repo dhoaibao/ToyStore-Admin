@@ -25,5 +25,5 @@ jobs:
             git pull origin main
             bun install
             npm run build
-            cp -r dist/* /var/www/toystore-admin
+            sudo cp -r dist/* /var/www/toystore-admin
           EOF

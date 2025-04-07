@@ -23,7 +23,17 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
             cd ~/ToyStore/ToyStore-Admin
             git pull origin main
+            
+            # Install Bun if not already installed
+            if ! command -v bun &> /dev/null; then
+              echo "Installing Bun..."
+              curl -fsSL https://bun.sh/install | bash
+              # Add Bun to PATH (adjust based on your shell, e.g., for zsh)
+              echo 'export PATH="$HOME/.bun/bin:$PATH"' >> ~/.zshrc
+              source ~/.zshrc
+            fi
+            
             bun install
-            npm run build
+            bun run build
             sudo cp -r dist/* /var/www/toystore-admin
           EOF

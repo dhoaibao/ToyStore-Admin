@@ -112,7 +112,7 @@ const Product = () => {
         target: "sorter-icon",
       },
       sorter: true,
-      sortOrder: getSortOrder(searchParams, "quantity"),
+      sortOrder: getSortOrder(searchParams, "soldNumber"),
     },
     {
       title: (

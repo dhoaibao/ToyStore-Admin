@@ -69,6 +69,7 @@ const Review = () => {
         </div>
       ),
       dataIndex: "comment",
+      width: "20%",
     },
     {
       title: (
@@ -78,7 +79,7 @@ const Review = () => {
       ),
       dataIndex: "rating",
       align: "center",
-      render: (rating) => <Rate disabled allowHalf value={rating} />,
+      render: (rating) => <Rate disabled allowHalf  value={rating} />,
       width: "15%",
     },
     {
@@ -98,7 +99,7 @@ const Review = () => {
           <p className="line-clamp-2">{product.productName}</p>
         </div>
       ),
-      width: "30%",
+      width: "25%",
     },
     {
       title: (

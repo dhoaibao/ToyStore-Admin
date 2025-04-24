@@ -10,6 +10,7 @@ import {
   Bolt,
   Ticket,
   BadgePercent,
+  Newspaper
 } from "lucide-react";
 import { Divider } from "antd";
 import { useSelector } from "react-redux";
@@ -75,6 +76,12 @@ const Sidebar = () => {
         title: "Đánh giá",
         module: "REVIEW",
         icon: <Star strokeWidth={1} />,
+      },
+      {
+        to: "/news",
+        title: "Tin tức",
+        module: null,
+        icon: <Newspaper strokeWidth={1} />,
       },
       {
         to: "/users",

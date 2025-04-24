@@ -66,6 +66,7 @@ const NewsForm = ({ open, setOpen, data, setFetchData }) => {
     setOpen(false);
     form.resetFields();
     setFileList([]);
+    setContent("");
   };
 
   const onFinish = async (values) => {

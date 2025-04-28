@@ -51,6 +51,8 @@ const Promotion = () => {
     setFetchData(false);
   }, [fetchData, searchParams]);
 
+  console.log(promotions)
+
   const columns = [
     {
       title: (
@@ -78,73 +80,16 @@ const Promotion = () => {
         </div>
       ),
       dataIndex: "promotionName",
-      width: "30%",
+      width: "35%",
     },
     {
       title: (
         <div className="text-center">
-          <span>Loại</span>
+          <span>Mô tả</span>
         </div>
       ),
-      align: "center",
-      dataIndex: "discountType",
-      render: (discountType) => {
-        if (discountType === "percentage")
-          return <Tag color="blue">Phần trăm</Tag>;
-        else if (discountType === "fixed_amount")
-          return <Tag color="orange">Cố định</Tag>;
-      },
-      filters: [
-        { text: "Phần trăm", value: "percentage" },
-        { text: "Cố định", value: "fixed_amount" },
-      ],
-      filteredValue: [searchParams.get("discountType")],
-      filterMultiple: false,
-    },
-    {
-      title: (
-        <div className="text-center">
-          <span>Giảm</span>
-        </div>
-      ),
-      align: "right",
-      dataIndex: "discountValue",
-      render: (discountValue, record) => {
-        if (record.discountType === "percentage")
-          return <p>{discountValue}%</p>;
-        else if (record.discountType === "fixed_amount")
-          return <p>{discountValue.toLocaleString("vi-VN")}đ</p>;
-      },
-    },
-    {
-      title: (
-        <div className="text-center">
-          <span>Bắt đầu</span>
-        </div>
-      ),
-      dataIndex: "startDate",
-      align: "center",
-      render: (startDate) => dayjs(startDate).format("DD/MM/YYYY"),
-      showSorterTooltip: {
-        target: "sorter-icon",
-      },
-      sorter: true,
-      sortOrder: getSortOrder(searchParams, "startDate"),
-    },
-    {
-      title: (
-        <div className="text-center">
-          <span>Kết thúc</span>
-        </div>
-      ),
-      dataIndex: "endDate",
-      align: "center",
-      render: (endDate) => dayjs(endDate).format("DD/MM/YYYY"),
-      showSorterTooltip: {
-        target: "sorter-icon",
-      },
-      sorter: true,
-      sortOrder: getSortOrder(searchParams, "endDate"),
+      dataIndex: "description",
+      width: "45%",
     },
     {
       title: (
@@ -182,15 +127,6 @@ const Promotion = () => {
         setSelectedItem={setSelectedPromotion}
         setFetchData={setFetchData}
         pagination={pagination}
-        expandable={{
-          expandedRowRender: (record) => (
-            <p className="m-0">
-              <span className="font-semibold">Mô tả:</span> {record.description}
-            </p>
-          ),
-          rowExpandable: (record) =>
-            record.promotionName !== "Không có mô tả về khuyến mãi này!",
-        }}
       />
       <PromotionForm
         open={open}

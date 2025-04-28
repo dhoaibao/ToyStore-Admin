@@ -36,7 +36,6 @@ const ProfileDropdown = () => {
       icon: <LockOutlined />,
       onClick: () => setChangePassOpen(true),
     },
-
     {
       key: "3",
       label: "Đăng xuất",

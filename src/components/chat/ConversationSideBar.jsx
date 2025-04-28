@@ -10,6 +10,7 @@ import { useSocket } from "../../context/SocketContext";
 const ConversationSideBar = ({
   selectedConversation,
   setSelectedConversation,
+  newMess,
 }) => {
   const { userId } = useSelector((state) => state.user);
   const socket = useSocket();
@@ -185,6 +186,7 @@ const ConversationSideBar = ({
 ConversationSideBar.propTypes = {
   selectedConversation: PropTypes.number,
   setSelectedConversation: PropTypes.func.isRequired,
+  newMess: PropTypes.object,
 };
 
 export default ConversationSideBar;

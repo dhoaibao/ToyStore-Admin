@@ -30,7 +30,7 @@ const Sidebar = () => {
         to: "/",
         title: "Tổng quan",
         icon: <ChartArea strokeWidth={1} />,
-        module: null,
+        module: "STATISTICS",
       },
       {
         title: "Quản lý sản phẩm",
@@ -80,7 +80,7 @@ const Sidebar = () => {
       {
         to: "/news",
         title: "Tin tức",
-        module: null,
+        module: "NEWS",
         icon: <Newspaper strokeWidth={1} />,
       },
       {

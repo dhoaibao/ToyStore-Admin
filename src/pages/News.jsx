@@ -1,18 +1,18 @@
-import { Button, Tag } from "antd";
+import { Button } from "antd";
 import { useState, useEffect, useMemo } from "react";
-import { promotionService } from "../services";
+import { newsService } from "../services";
 import dayjs from "dayjs";
 import { Pencil } from "lucide-react";
-import PromotionForm from "../components/promotion/PromotionForm";
+import NewsForm from "../components/news/NewsForm";
 import { useLocation } from "react-router-dom";
 import DataTable from "../components/common/DataTable";
 import { getSortOrder } from "../utils";
 
-const Promotion = () => {
-  const [promotions, setPromotions] = useState([]);
+const News = () => {
+  const [news, setnews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedPromotion, setSelectedPromotion] = useState(null);
+  const [selectedNews, setSelectedNews] = useState(null);
   const [fetchData, setFetchData] = useState(true);
   const [pagination, setPagination] = useState({
     totalPages: 0,
@@ -27,14 +27,14 @@ const Promotion = () => {
   );
 
   useEffect(() => {
-    const fetchPromotions = async () => {
+    const fetchNews = async () => {
       setLoading(true);
       try {
-        const response = await promotionService.getAllPromotions(
+        const response = await newsService.getAllNews(
           searchParams.toString()
         );
-        setPromotions(
-          response.data.map((item) => ({ ...item, key: item.promotionId }))
+        setnews(
+          response.data.map((item) => ({ ...item, key: item.newsId }))
         );
         setPagination({
           totalPages: response.pagination.totalPages,
@@ -43,15 +43,13 @@ const Promotion = () => {
         });
         setLoading(false);
       } catch (error) {
-        console.error("Failed to fetch promotion list: ", error.data);
+        console.error("Failed to fetch News list: ", error.data);
         setLoading(false);
       }
     };
-    if (fetchData || searchParams) fetchPromotions();
+    if (fetchData || searchParams) fetchNews();
     setFetchData(false);
   }, [fetchData, searchParams]);
-
-  console.log(promotions)
 
   const columns = [
     {
@@ -60,36 +58,56 @@ const Promotion = () => {
           <span>Hình ảnh</span>
         </div>
       ),
-      dataIndex: "promotionThumbnail",
+      dataIndex: "thumbnail",
       align: "center",
-      render: (promotionThumbnail) => (
+      render: (thumbnail) => (
         <div className="flex justify-center">
           <img
-            src={promotionThumbnail.url}
-            alt="category"
+            src={thumbnail.url}
+            alt="News"
             className="w-8 h-8 object-cover rounded-md"
           />
         </div>
       ),
-      width: "8%",
     },
     {
       title: (
         <div className="text-center">
-          <span>Tên khuyến mãi</span>
+          <span>Tiêu đề</span>
         </div>
       ),
-      dataIndex: "promotionName",
-      width: "35%",
-    },
-    {
-      title: (
-        <div className="text-center">
-          <span>Mô tả</span>
-        </div>
-      ),
-      dataIndex: "description",
+      dataIndex: "title",
       width: "45%",
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Ngày tạo</span>
+        </div>
+      ),
+      dataIndex: "createdAt",
+      align: "center",
+      render: (createdAt) => dayjs(createdAt).format("DD/MM/YYYY"),
+      showSorterTooltip: {
+        target: "sorter-icon",
+      },
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "createdAt"),
+    },
+    {
+      title: (
+        <div className="text-center">
+          <span>Ngày cập nhật</span>
+        </div>
+      ),
+      dataIndex: "updatedAt",
+      align: "center",
+      render: (updatedAt) => dayjs(updatedAt).format("DD/MM/YYYY"),
+      showSorterTooltip: {
+        target: "sorter-icon",
+      },
+      sorter: true,
+      sortOrder: getSortOrder(searchParams, "updatedAt"),
     },
     {
       title: (
@@ -104,7 +122,7 @@ const Promotion = () => {
           <Button
             type="text"
             onClick={() => {
-              setSelectedPromotion(record);
+              setSelectedNews(record);
               setOpen(true);
             }}
           >
@@ -118,24 +136,24 @@ const Promotion = () => {
   return (
     <>
       <DataTable
-        title="Khuyến mãi"
-        searchPlaceholder={"Nhập tên khuyến mãi để tìm kiếm..."}
-        data={promotions}
+        title="Tin tức"
+        searchPlaceholder="Nhập tiêu đề tin tức để tìm kiếm..."
+        data={news}
         loading={loading}
         columns={columns}
         setOpenForm={setOpen}
-        setSelectedItem={setSelectedPromotion}
+        setSelectedItem={setSelectedNews}
         setFetchData={setFetchData}
         pagination={pagination}
       />
-      <PromotionForm
+      <NewsForm
         open={open}
         setOpen={setOpen}
-        data={selectedPromotion}
+        data={selectedNews}
         setFetchData={setFetchData}
       />
     </>
   );
 };
 
-export default Promotion;
+export default News;

@@ -15,3 +15,4 @@ export * from "./permission.service";
 export * from "./review.service";
 export * from "./message.service";
 export * from "./statistic.service";
+export * from "./news.service";

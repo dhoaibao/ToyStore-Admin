@@ -24,7 +24,7 @@ const Header = () => {
     <div className="flex items-center justify-end bg-white space-x-4 p-4 shadow-sm sticky top-0 z-50 h-16 ">
       <Bell strokeWidth={1} className="cursor-pointer" />
       <button
-        onClick={handleLogin}
+        onClick={!isLogin ? handleLogin : undefined}
         className="flex items-center justify-center"
       >
         {isLogin ? <ProfileDropdown /> : <LogIn strokeWidth={1} />}

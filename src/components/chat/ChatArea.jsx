@@ -20,7 +20,7 @@ import { useSocket } from "../../context/SocketContext";
 
 const { Text } = Typography;
 
-const ChatArea = ({ selectedConversation }) => {
+const ChatArea = ({ selectedConversation, setNewMess }) => {
   const { userId, user } = useSelector((state) => state.user);
   const socket = useSocket();
 
@@ -51,7 +51,7 @@ const ChatArea = ({ selectedConversation }) => {
         setLoading(true);
         const result = await messageService.getMessages(
           selectedConversation,
-          `page=${page}&limit=20`,
+          `page=${page}&limit=20`
         );
         if (result && result.pagination) {
           setPage(result.pagination.page);
@@ -77,8 +77,8 @@ const ChatArea = ({ selectedConversation }) => {
         prev.map((msg) =>
           msg.senderId === senderId && !msg.isRead
             ? { ...msg, isRead: true }
-            : msg,
-        ),
+            : msg
+        )
       );
     });
 
@@ -86,6 +86,7 @@ const ChatArea = ({ selectedConversation }) => {
     socket.on("newMessage", (data) => {
       if (path === "/chats") {
         setMessages((prev) => [...prev, { ...data }]);
+        setNewMess(data);
         socket.emit("markAsRead", {
           senderId: data.senderId,
           receiverId: userId,
@@ -155,8 +156,8 @@ const ChatArea = ({ selectedConversation }) => {
         buffer: file.originFileObj,
       })),
     };
-    
-    console.log(newMsg)
+
+    console.log(newMsg);
 
     socket.emit("sendMessageByStore", newMsg);
 
@@ -169,6 +170,13 @@ const ChatArea = ({ selectedConversation }) => {
         })),
       },
     ]);
+
+    setNewMess(...messages, {
+      ...newMsg,
+      uploadImages: fileList.map((file) => ({
+        url: URL.createObjectURL(file.originFileObj),
+      })),
+    });
 
     // Reset input fields
     setNewMessage("");
@@ -184,7 +192,7 @@ const ChatArea = ({ selectedConversation }) => {
   // Handle removing files from the upload list
   const handleRemove = (file) => {
     setFileList((prevFileList) =>
-      prevFileList.filter((item) => item.uid !== file.uid),
+      prevFileList.filter((item) => item.uid !== file.uid)
     );
   };
 
@@ -230,7 +238,11 @@ const ChatArea = ({ selectedConversation }) => {
                 >
                   {message.uploadImages && message.uploadImages.length > 0 && (
                     <div
-                      className={`max-w-[70%] flex flex-wrap ${message.senderId !== selectedConversation ? "justify-end" : "justify-start"}`}
+                      className={`max-w-[70%] flex flex-wrap ${
+                        message.senderId !== selectedConversation
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
                     >
                       {message.uploadImages.map((image, idx) => (
                         <Image
@@ -310,7 +322,7 @@ const ChatArea = ({ selectedConversation }) => {
               beforeUpload={(file) => {
                 // Check if file with same name already exists in fileList
                 const isDuplicate = fileList.some(
-                  (item) => item.originFileObj.name === file.name,
+                  (item) => item.originFileObj.name === file.name
                 );
                 if (isDuplicate) {
                   message.warning("Hình ảnh này đã được chọn");
@@ -359,6 +371,7 @@ const ChatArea = ({ selectedConversation }) => {
 
 ChatArea.propTypes = {
   selectedConversation: PropTypes.number,
+  setNewMess: PropTypes.func.isRequired,
 };
 
 export default ChatArea;

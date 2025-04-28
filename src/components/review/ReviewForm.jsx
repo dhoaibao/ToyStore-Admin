@@ -179,7 +179,7 @@ const ReviewForm = ({ open, setOpen, data, setFetchData }) => {
               { required: true, message: "Vui lòng nhập trả lời đánh giá" },
             ]}
           >
-            <Input.TextArea />
+            <Input.TextArea placeholder="Nhập trả lời" />
           </Form.Item>
 
           <Form.Item label="Hình ảnh:" name="images">

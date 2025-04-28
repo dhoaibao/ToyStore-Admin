@@ -58,6 +58,8 @@ export const MODULES = [
   "ROLE",
   "PERMISSION",
   "SYSTEM_CONFIGURATION",
+  "NEWS",
+  "STATISTICS",
 ];
 
 export const TIME_INTERVAL = {
